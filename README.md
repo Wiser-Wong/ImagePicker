@@ -9,23 +9,36 @@
 ![images](https://github.com/Wiser-Wong/ImagePicker/blob/master/images/image_picker5.gif)
 
 ## 环境配置
+     allprojects {
+        repositories {
+          ...
+          maven { url 'https://jitpack.io' }
+        }
+      }
 
+        dependencies {
+              implementation 'com.github.Wiser-Wong:ImagePicker:1.0.0'
+      }
 ## 使用控件
+### 注意事项
+  PhotoGridView 展示图片Layout 必须添加photoResId 图片id。
 
   * PhotoGridView
   
         <com.wiser.photo.grid.PhotoGridView
-            android:id="@+id/gv_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:pgv_addMode="end"
-            app:pgv_addLayoutId="@layout/photo_add_layout"
-            app:pgv_maxCounts="5"
-            app:pgv_photoLayoutId="@layout/photo_item"
-            app:pgv_spanCount="4"
-            app:pgv_isPreview="true"
-            app:pgv_selectPhotoMode="camera"
-            app:pgv_selectPhotoSpanCount="3"/>
+             android:id="@+id/gv_photo"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             app:pgv_addLayoutId="@layout/add"
+             app:pgv_addMode="end"
+             app:pgv_isPreview="true"
+             app:pgv_maxCounts="5"
+             app:pgv_photoDeleteResId="@+id/iv_photo_delete"
+             app:pgv_photoLayoutId="@layout/item"
+             app:pgv_photoResId="@+id/iv_photo"
+             app:pgv_selectPhotoMode="camera"
+             app:pgv_selectPhotoSpanCount="3"
+             app:pgv_spanCount="4" />
   
         由于PhotoGridView控件中点击添加按钮处理了跳转逻辑，所以想要自定义跳转逻辑的同学需要添加监听
         gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
@@ -67,6 +80,8 @@
 * pgv_selectPhotoSpanCount:选择图片界面展示列数
 * pgv_addMode:添加布局模式及位置（head、end、other）
 * pgv_selectPhotoMode:选择图片模式（camera、photo）
+* pgv_photoResId:展示图片布局内部图片控件id
+* pgv_photoDeleteResId:展示图片布局内部删除id
 
 PhotoConstant.CAMERA_MODE 拍照模式
 PhotoConstant.PHOTO_MODE 相册模式
