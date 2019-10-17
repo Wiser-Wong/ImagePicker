@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wiser.photo.weight.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_small_frame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_small_frame_st">
+
+    <com.wiser.photo.weight.SquaredImageView
+        android:id="@+id/iv_small_photo"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:adjustViewBounds="true"
+        android:padding="3dp"
+        android:src="@mipmap/photo_error" />
+</com.wiser.photo.weight.SquareFrameLayout>

@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.wiser.photo">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        tools:targetApi="donut">
+        <activity
+            android:name=".select.PhotoSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".preview.PhotoPreviewActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

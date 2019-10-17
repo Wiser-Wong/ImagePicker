@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wiser.photo.weight.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#363636"
+    android:layout_margin="1dp">
+
+    <TextView
+        android:id="@+id/tv_camera_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/photo_camera"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="#50ffffff"
+        android:singleLine="true"
+        android:text="拍摄照片"/>
+
+<!--    <com.wiser.photoselectupload.photo.weight.SquaredImageView-->
+<!--        android:id="@+id/iv_camera_photo"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:src="@mipmap/photo_camera"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+</com.wiser.photo.weight.SquareFrameLayout>

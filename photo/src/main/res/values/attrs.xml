@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PhotoGridView">
+        <attr name="pgv_addLayoutId" format="reference" />
+        <attr name="pgv_photoLayoutId" format="reference" />
+        <attr name="pgv_spanCount" format="integer" />
+        <attr name="pgv_maxCounts" format="integer" />
+        <attr name="pgv_isPreview" format="boolean" />
+        <attr name="pgv_selectPhotoSpanCount" format="integer" />
+        <attr name="pgv_addMode">
+            <enum name="head" value="0" />
+            <enum name="end" value="1" />
+            <enum name="other" value="2" />
+        </attr>
+        <attr name="pgv_selectPhotoMode">
+            <enum name="camera" value="11002" />
+            <enum name="photo" value="11003" />
+        </attr>
+    </declare-styleable>
+</resources>

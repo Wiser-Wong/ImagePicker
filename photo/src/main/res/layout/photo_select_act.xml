@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/cl_photo_select_title"
+        layout="@layout/photo_select_title_layout" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rlv_photo_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#292929"
+        android:padding="2dp"
+        android:layout_above="@+id/cl_photo_select_bottom"
+        android:layout_below="@+id/cl_photo_select_title" />
+
+    <include
+        android:id="@+id/cl_photo_select_bottom"
+        layout="@layout/photo_select_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>
