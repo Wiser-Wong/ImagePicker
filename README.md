@@ -9,7 +9,16 @@
 ![images](https://github.com/Wiser-Wong/ImagePicker/blob/master/images/image_picker5.gif)
 
 ## 环境配置
+     allprojects {
+        repositories {
+          ...
+          maven { url 'https://jitpack.io' }
+        }
+      }
 
+        dependencies {
+              implementation 'com.github.Wiser-Wong:ImagePicker:1.0.0'
+      }
 ## 使用控件
 ### 注意事项
   PhotoGridView 展示图片Layout 必须添加photoResId 图片id。
