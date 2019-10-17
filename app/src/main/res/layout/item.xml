@@ -22,6 +22,6 @@
         android:layout_height="25dp"
         android:layout_gravity="end"
         android:adjustViewBounds="true"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/photo_delete_icon"/>
 
 </com.wiser.photo.weight.SquareFrameLayout>

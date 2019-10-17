@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPhotoItemClickListener {
 
-	private int									addLayoutId, photoLayoutId;
+	private int									addLayoutId, photoLayoutId, photoResId, deleteResId;
 
 	private int									spanCount				= 4;
 
@@ -61,6 +61,8 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotoGridView);
 		addLayoutId = ta.getResourceId(R.styleable.PhotoGridView_pgv_addLayoutId, -1);
 		photoLayoutId = ta.getResourceId(R.styleable.PhotoGridView_pgv_photoLayoutId, -1);
+		photoResId = ta.getResourceId(R.styleable.PhotoGridView_pgv_photoResId, -1);
+		deleteResId = ta.getResourceId(R.styleable.PhotoGridView_pgv_photoDeleteResId, -1);
 		spanCount = ta.getInt(R.styleable.PhotoGridView_pgv_spanCount, spanCount);
 		selectPhotoSpanCount = ta.getInt(R.styleable.PhotoGridView_pgv_selectPhotoSpanCount, selectPhotoSpanCount);
 		addMode = ta.getInt(R.styleable.PhotoGridView_pgv_addMode, BasePhotoAdapter.HEAD);
@@ -75,9 +77,12 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 	private PhotoConfig photoConfig() {
 		if (addLayoutId == -1 || photoLayoutId == -1) throw new IllegalArgumentException("请设置展示的添加布局或者图片布局ID");
+		if (photoResId == -1) throw new IllegalArgumentException("请设置展示的图片布局内部图片控件ID");
 		PhotoConfig photoConfig = new PhotoConfig();
 		photoConfig.addLayoutId = addLayoutId;
 		photoConfig.photoLayoutId = photoLayoutId;
+		photoConfig.photoResId = photoResId;
+		photoConfig.deleteResId = deleteResId;
 		return photoConfig;
 	}
 

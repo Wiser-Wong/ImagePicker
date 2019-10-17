@@ -32,7 +32,7 @@ public class PhotoShowAdapter<T> extends BasePhotoAdapter<T, BasePhotoHolder> {
 
 	@Override public BasePhotoHolder newViewHolder(ViewGroup viewGroup, int type) {
 		if (type == HEAD || type == END) return new PhotoAddHolder(inflate(photoConfig.addLayoutId, viewGroup));
-		else return new PhotoHolder(inflate(photoConfig.photoLayoutId, viewGroup));
+		else return new PhotoHolder(inflate(photoConfig.photoLayoutId, viewGroup),photoConfig);
 	}
 
 }

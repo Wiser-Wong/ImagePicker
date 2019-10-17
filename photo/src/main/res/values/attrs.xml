@@ -3,6 +3,8 @@
     <declare-styleable name="PhotoGridView">
         <attr name="pgv_addLayoutId" format="reference" />
         <attr name="pgv_photoLayoutId" format="reference" />
+        <attr name="pgv_photoResId" format="reference" />
+        <attr name="pgv_photoDeleteResId" format="reference" />
         <attr name="pgv_spanCount" format="integer" />
         <attr name="pgv_maxCounts" format="integer" />
         <attr name="pgv_isPreview" format="boolean" />

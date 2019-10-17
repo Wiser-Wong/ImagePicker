@@ -1,14 +1,13 @@
 package com.wiser.photo.edit;
 
+import com.bumptech.glide.Glide;
+import com.wiser.photo.base.BasePhotoHolder;
+import com.wiser.photo.config.PhotoConfig;
+import com.wiser.photo.model.PhotoShowModel;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
-
-import com.bumptech.glide.Glide;
-import com.wiser.photo.R;
-import com.wiser.photo.base.BasePhotoHolder;
-import com.wiser.photo.model.PhotoShowModel;
-import com.wiser.photo.weight.SquaredImageView;
 
 /**
  * @author Wiser
@@ -21,16 +20,18 @@ public class PhotoHolder extends BasePhotoHolder<PhotoShowModel> {
 
 	private AppCompatImageView	ivPhotoDelete;
 
-	public PhotoHolder(@NonNull View itemView) {
+	public PhotoHolder(@NonNull View itemView, PhotoConfig photoConfig) {
 		super(itemView);
-		ivPhoto = itemView.findViewById(R.id.iv_photo);
-		ivPhotoDelete = itemView.findViewById(R.id.iv_photo_delete);
+		if (photoConfig == null) return;
+		ivPhoto = itemView.findViewById(photoConfig.photoResId);
+		if (photoConfig.deleteResId == -1) return;
+		ivPhotoDelete = itemView.findViewById(photoConfig.deleteResId);
 	}
 
 	@Override public void bindData(PhotoShowModel model, final int position) {
-		if (model == null) return;
+		if (model == null || adapter() == null) return;
 		if (model.path != null && !"".equals(model.path)) {
-			Glide.with(ivPhoto.getContext()).load(model.path).centerCrop().into(ivPhoto);
+			Glide.with(adapter().getContext()).load(model.path).centerCrop().into(ivPhoto);
 		}
 
 		itemView.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +43,7 @@ public class PhotoHolder extends BasePhotoHolder<PhotoShowModel> {
 			}
 		});
 
+		if (ivPhotoDelete == null) return;
 		ivPhotoDelete.setOnClickListener(new View.OnClickListener() {
 
 			@Override public void onClick(View v) {

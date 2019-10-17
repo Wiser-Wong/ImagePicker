@@ -21,22 +21,22 @@ public class PhotoAct extends AppCompatActivity {
 
 		gvPhoto.setMaxCounts(9);
 
-		gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
-			@Override
-			public void onAddClick(View view, int position) {
-
-			}
-
-			@Override
-			public void onItemClick(View view, int position) {
-
-			}
-
-			@Override
-			public void onDeleteClick(View view, int position) {
-
-			}
-		});
+//		gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
+//			@Override
+//			public void onAddClick(View view, int position) {
+//
+//			}
+//
+//			@Override
+//			public void onItemClick(View view, int position) {
+//
+//			}
+//
+//			@Override
+//			public void onDeleteClick(View view, int position) {
+//
+//			}
+//		});
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
