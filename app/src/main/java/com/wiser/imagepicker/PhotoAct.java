@@ -20,6 +20,23 @@ public class PhotoAct extends AppCompatActivity {
 		gvPhoto = findViewById(R.id.gv_photo);
 
 		gvPhoto.setMaxCounts(9);
+
+		gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
+			@Override
+			public void onAddClick(View view, int position) {
+
+			}
+
+			@Override
+			public void onItemClick(View view, int position) {
+
+			}
+
+			@Override
+			public void onDeleteClick(View view, int position) {
+
+			}
+		});
 	}
 
 	@Override protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -30,7 +47,7 @@ public class PhotoAct extends AppCompatActivity {
 	}
 
 	public void openPhoto(View view) {
-		PhotoSelectActivity.intent(this, 0, 4);
+		PhotoSelectActivity.intent(this, 0, 4,PhotoConstant.CAMERA_MODE);
 	}
 
 	@Override protected void onDestroy() {

@@ -67,7 +67,7 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 
 	private boolean						isNoBtnPreview;
 
-	private int							type	= PhotoConstant.PREVIEW_PHOTO_MODEL;
+	private int							type	= PhotoConstant.PREVIEW_PHOTO_MODE;
 
 	private boolean						isTitleHide;
 
@@ -78,10 +78,10 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 			this.position = bundle.getInt(PhotoConstant.PREVIEW_PHOTO_INDEX_KEY);
 			this.selectData = bundle.getParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY);
 			this.surplusCount = bundle.getInt(PhotoConstant.SURPLUS_COUNT_KEY);
-			this.type = bundle.getInt(PhotoConstant.PREVIEW_MODEL_KEY, PhotoConstant.PREVIEW_PHOTO_MODEL);
-			isCamera = bundle.getBoolean(PhotoConstant.SHOW_MODEL_KEY, false);
+			this.type = bundle.getInt(PhotoConstant.PREVIEW_MODE_KEY, PhotoConstant.PREVIEW_PHOTO_MODE);
+			isCamera = bundle.getBoolean(PhotoConstant.SHOW_MODE_KEY, false);
 			this.count = selectData != null ? selectData.size() : 0;
-			this.isNoBtnPreview = type != PhotoConstant.PREVIEW_BTN_MODEL;
+			this.isNoBtnPreview = type != PhotoConstant.PREVIEW_BTN_MODE;
 			if (isCamera && isNoBtnPreview) {
 				if (this.list != null && this.list.size() > 0) this.list.remove(0);
 				if (position > 0) position--;

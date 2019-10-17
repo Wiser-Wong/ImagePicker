@@ -58,8 +58,8 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		bundle.putParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY, selectData);
 		bundle.putInt(PhotoConstant.SURPLUS_COUNT_KEY, surplusCount);
 		bundle.putInt(PhotoConstant.PREVIEW_PHOTO_INDEX_KEY, index);
-		bundle.putInt(PhotoConstant.PREVIEW_MODEL_KEY, type);
-		bundle.putBoolean(PhotoConstant.SHOW_MODEL_KEY, isCamera);
+		bundle.putInt(PhotoConstant.PREVIEW_MODE_KEY, type);
+		bundle.putBoolean(PhotoConstant.SHOW_MODE_KEY, isCamera);
 		intent.putExtras(bundle);
 		activity.startActivityForResult(intent, PhotoConstant.PREVIEW_PHOTO);
 	}
@@ -247,7 +247,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		bundle.putParcelableArrayList(PhotoConstant.INTENT_SELECT_PHOTO_KEY, iPhotoPreviewBiz.getList());
 		bundle.putParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY, iPhotoPreviewBiz.getSelectData());
 		bundle.putInt(PhotoConstant.SELECT_PHOTO_COUNT_KEY, iPhotoPreviewBiz.getCount());
-		bundle.putInt(PhotoConstant.PREVIEW_MODEL_KEY, iPhotoPreviewBiz.getType());
+		bundle.putInt(PhotoConstant.PREVIEW_MODE_KEY, iPhotoPreviewBiz.getType());
 		intent.putExtras(bundle);
 		setResult(PhotoConstant.PREVIEW_PHOTO, intent);
 		finish();

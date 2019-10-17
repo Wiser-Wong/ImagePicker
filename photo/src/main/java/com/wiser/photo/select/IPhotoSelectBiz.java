@@ -162,7 +162,7 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 				long dateTime = query.getLong(query.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
 				PhotoSelectModel photoSelectModel = null;
 				if (fileExist(path)) {
-					photoSelectModel = new PhotoSelectModel(path, name, dateTime, PhotoConstant.PHOTO_MODEL, position++);
+					photoSelectModel = new PhotoSelectModel(path, name, dateTime, PhotoConstant.PHOTO_MODE, position++);
 					images.add(photoSelectModel);
 				}
 				// 获取文件夹数据
@@ -182,7 +182,7 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 						if (isCamera) {
 							// 添加相机
 							PhotoSelectModel camera = new PhotoSelectModel();
-							camera.type = PhotoConstant.CAMERA_MODEL;
+							camera.type = PhotoConstant.CAMERA_MODE;
 							camera.position = 0;
 							folder.folderPhotos.add(0, camera);
 						}
@@ -198,7 +198,7 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 		// 添加相机
 		if (isCamera) {
 			PhotoSelectModel camera = new PhotoSelectModel();
-			camera.type = PhotoConstant.CAMERA_MODEL;
+			camera.type = PhotoConstant.CAMERA_MODE;
 			camera.position = 0;
 			images.add(0, camera);
 		}

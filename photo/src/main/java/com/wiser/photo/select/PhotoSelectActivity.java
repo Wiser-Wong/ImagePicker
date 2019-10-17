@@ -52,7 +52,7 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		Intent intent = new Intent(activity, PhotoSelectActivity.class);
 		intent.putExtra(PhotoConstant.SURPLUS_COUNT_KEY, surplusCount);
 		intent.putExtra(PhotoConstant.SPAN_COUNT_KEY, spanCount);
-		intent.putExtra(PhotoConstant.SHOW_MODEL_KEY, type);
+		intent.putExtra(PhotoConstant.SHOW_MODE_KEY, type);
 		activity.startActivityForResult(intent, PhotoConstant.SELECT_PHOTO);
 		activity.overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
 	}
@@ -82,7 +82,7 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		tvAllPhotoFolder.setOnClickListener(this);
 
 		iPhotoSelectBiz = new PhotoSelectBiz(getIntent() != null ? getIntent().getIntExtra(PhotoConstant.SURPLUS_COUNT_KEY, 0) : 0,
-				getIntent() != null && getIntent().getIntExtra(PhotoConstant.SHOW_MODEL_KEY, -1) == PhotoConstant.CAMERA_MODEL);
+				getIntent() != null && getIntent().getIntExtra(PhotoConstant.SHOW_MODE_KEY, -1) == PhotoConstant.CAMERA_MODE);
 
 		rlvPhotoSelect.setLayoutManager(new GridLayoutManager(this,
 				getIntent() != null ? (getIntent().getIntExtra(PhotoConstant.SPAN_COUNT_KEY, PhotoConstant.DEFAULT_SPAN_COUNT) > 0
@@ -190,7 +190,7 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 			this.finish();
 			overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
 		} else if (id == R.id.tv_photo_select_preview) {// 预览
-			PhotoPreviewActivity.intent(this, photoSelectAdapter.getSelectData(), photoSelectAdapter.getSelectData(), iPhotoSelectBiz.getSurplusCount(), 0, PhotoConstant.PREVIEW_BTN_MODEL,
+			PhotoPreviewActivity.intent(this, photoSelectAdapter.getSelectData(), photoSelectAdapter.getSelectData(), iPhotoSelectBiz.getSurplusCount(), 0, PhotoConstant.PREVIEW_BTN_MODE,
 					iPhotoSelectBiz.isCamera());
 		} else if (id == R.id.tv_photo_select_finish) {// 完成
 			complete();
@@ -246,13 +246,13 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 						ArrayList<PhotoSelectModel> selectData = bundle.getParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY);
 						int count = bundle.getInt(PhotoConstant.SELECT_PHOTO_COUNT_KEY);
 						// 添加相机
-						if (iPhotoSelectBiz.isCamera() && bundle.getInt(PhotoConstant.PREVIEW_MODEL_KEY) != PhotoConstant.PREVIEW_BTN_MODEL && models != null)
-							models.add(0, new PhotoSelectModel("", "", 0, PhotoConstant.CAMERA_MODEL, 0));
+						if (iPhotoSelectBiz.isCamera() && bundle.getInt(PhotoConstant.PREVIEW_MODE_KEY) != PhotoConstant.PREVIEW_BTN_MODE && models != null)
+							models.add(0, new PhotoSelectModel("", "", 0, PhotoConstant.CAMERA_MODE, 0));
 						// 图片点击预览
-						if (bundle.getInt(PhotoConstant.PREVIEW_MODEL_KEY) == PhotoConstant.PREVIEW_PHOTO_MODEL) {
+						if (bundle.getInt(PhotoConstant.PREVIEW_MODE_KEY) == PhotoConstant.PREVIEW_PHOTO_MODE) {
 							if (photoSelectAdapter != null) photoSelectAdapter.setData(models, selectData, count);
 							// 点击预览按钮
-						} else if (bundle.getInt(PhotoConstant.PREVIEW_MODEL_KEY) == PhotoConstant.PREVIEW_BTN_MODEL) {
+						} else if (bundle.getInt(PhotoConstant.PREVIEW_MODE_KEY) == PhotoConstant.PREVIEW_BTN_MODE) {
 							if (models != null && models.size() > 0) {
 								for (PhotoSelectModel model : models) {
 									if (model == null) continue;

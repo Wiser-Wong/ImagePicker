@@ -41,10 +41,10 @@ public interface PhotoConstant {
 	String	PREVIEW_PHOTO_COMPLETE_KEY		= "PREVIEW_PHOTO_COMPLETE_KEY";
 
 	// 预览模式key
-	String	PREVIEW_MODEL_KEY				= "PREVIEW_MODEL_KEY";
+	String	PREVIEW_MODE_KEY				= "PREVIEW_MODE_KEY";
 
 	// 展示模式key
-	String	SHOW_MODEL_KEY					= "SHOW_MODEL_KEY";
+	String	SHOW_MODE_KEY					= "SHOW_MODE_KEY";
 
 	// 完成Value
 	int		PREVIEW_PHOTO_COMPLETE_VALUE	= 109999;
@@ -59,16 +59,16 @@ public interface PhotoConstant {
 	int		DEFAULT_SPAN_COUNT				= 3;
 
 	// 预览图片模式
-	int		PREVIEW_PHOTO_MODEL				= 111110029;
+	int		PREVIEW_PHOTO_MODE				= 111110029;
 
 	// 预览按钮模式
-	int		PREVIEW_BTN_MODEL				= 222112440;
+	int		PREVIEW_BTN_MODE				= 222112440;
 
 	// 相机模式
-	int		CAMERA_MODEL					= 11002;
+	int		CAMERA_MODE						= 11002;
 
 	// 相册模式
-	int		PHOTO_MODEL						= 11003;
+	int		PHOTO_MODE						= 11003;
 
 	// 相机拍照请求码
 	int		CAMERA_REQUEST_CODE				= 119;

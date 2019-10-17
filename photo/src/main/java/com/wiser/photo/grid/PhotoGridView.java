@@ -36,7 +36,7 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 	private int									addMode					= BasePhotoAdapter.HEAD;
 
-	private int									selectPhotoMode			= PhotoConstant.CAMERA_MODEL;
+	private int									selectPhotoMode			= PhotoConstant.CAMERA_MODE;
 
 	private int									maxCounts				= 9;
 

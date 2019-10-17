@@ -67,14 +67,14 @@ public class PhotoSelectAdapter extends BasePhotoAdapter<PhotoSelectModel, BaseP
 	}
 
 	@Override public int getItemViewType(int position) {
-		if (getItem(position).type == PhotoConstant.CAMERA_MODEL) {
-			return PhotoConstant.CAMERA_MODEL;
+		if (getItem(position).type == PhotoConstant.CAMERA_MODE) {
+			return PhotoConstant.CAMERA_MODE;
 		}
 		return super.getItemViewType(position);
 	}
 
 	@Override public BasePhotoHolder<PhotoSelectModel> newViewHolder(ViewGroup viewGroup, int type) {
-		if (type == PhotoConstant.CAMERA_MODEL) return new CameraHolder(inflate(R.layout.photo_camera_layout, viewGroup));
+		if (type == PhotoConstant.CAMERA_MODE) return new CameraHolder(inflate(R.layout.photo_camera_layout, viewGroup));
 		return new PhotoSelectHolder(inflate(R.layout.photo_select_item, viewGroup));
 	}
 
@@ -104,7 +104,7 @@ public class PhotoSelectAdapter extends BasePhotoAdapter<PhotoSelectModel, BaseP
 				ivSelectPhoto.setOnClickListener(new View.OnClickListener() {
 
 					@Override public void onClick(View v) {
-						PhotoPreviewActivity.intent((FragmentActivity) getContext(), (ArrayList<PhotoSelectModel>) getItems(), selectData, surplusCount, position, PhotoConstant.PREVIEW_PHOTO_MODEL,
+						PhotoPreviewActivity.intent((FragmentActivity) getContext(), (ArrayList<PhotoSelectModel>) getItems(), selectData, surplusCount, position, PhotoConstant.PREVIEW_PHOTO_MODE,
 								iPhotoSelectBiz.isCamera());
 					}
 				});
