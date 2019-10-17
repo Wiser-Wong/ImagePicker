@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <com.wiser.photo.weight.SquaredImageView
-        android:id="@+id/iv_add_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@mipmap/photo_add_icon"

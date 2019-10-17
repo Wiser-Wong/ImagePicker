@@ -1,6 +1,7 @@
 package com.wiser.photo.edit;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -16,9 +17,9 @@ import com.wiser.photo.weight.SquaredImageView;
  */
 public class PhotoHolder extends BasePhotoHolder<PhotoShowModel> {
 
-	private SquaredImageView	ivPhoto;
+	private AppCompatImageView	ivPhoto;
 
-	private SquaredImageView	ivPhotoDelete;
+	private AppCompatImageView	ivPhotoDelete;
 
 	public PhotoHolder(@NonNull View itemView) {
 		super(itemView);

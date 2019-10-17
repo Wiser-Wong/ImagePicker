@@ -16,9 +16,9 @@
         app:pgv_maxCounts="5"
         app:pgv_photoLayoutId="@layout/photo_item"
         app:pgv_spanCount="4"
-        app:pgv_isPreview="false"
-        app:pgv_selectPhotoMode="photo"
-        app:pgv_selectPhotoSpanCount="5"/>
+        app:pgv_isPreview="true"
+        app:pgv_selectPhotoMode="camera"
+        app:pgv_selectPhotoSpanCount="3"/>
 
     <Button
         android:layout_width="match_parent"

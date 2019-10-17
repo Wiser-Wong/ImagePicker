@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatImageView
+    <com.wiser.photo.weight.SquaredImageView
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,10 +18,10 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/iv_photo_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_gravity="end"
         android:adjustViewBounds="true"
-        android:src="@mipmap/photo_delete_icon" />
+        android:src="@mipmap/ic_launcher"/>
 
 </com.wiser.photo.weight.SquareFrameLayout>
