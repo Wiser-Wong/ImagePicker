@@ -178,6 +178,7 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 						ArrayList<PhotoSelectModel> imageList = new ArrayList<>();
 						imageList.add(photoSelectModel);
 						folder.folderPhotos = imageList;
+						folder.folderCount = 1;
 						folderPhotos.add(folder);
 						if (isCamera) {
 							// 添加相机
