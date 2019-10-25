@@ -17,7 +17,7 @@
       }
 
         dependencies {
-              implementation 'com.github.Wiser-Wong:ImagePicker:1.0.0'
+              implementation 'com.github.Wiser-Wong:ImagePicker:1.1.0'
       }
 ## 使用控件
 ### 注意事项
