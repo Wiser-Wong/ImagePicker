@@ -38,7 +38,8 @@
              app:pgv_photoResId="@+id/iv_photo"
              app:pgv_selectPhotoMode="camera"
              app:pgv_selectPhotoSpanCount="3"
-             app:pgv_spanCount="4" />
+             app:pgv_spanCount="4"
+             app:pgv_isCompress="true" />
   
         由于PhotoGridView控件中点击添加按钮处理了跳转逻辑，所以想要自定义跳转逻辑的同学需要添加监听
         gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
@@ -60,7 +61,9 @@
         
         //单独跳转选择图片界面
         PhotoSelectActivity.intent(this, 9 //剩余选择图片数量, 4 //选择图片界面显示的列数 , PhotoConstant.CAMERA_MODE //图片选择器模式，PhotoConstant.CAMERA_MODEL需要拍照模式，PhotoConstant.PHOTO_MODE只展示图片模式);
-  
+        //跳转选择图片界面传递数据
+        PhotoSelectActivity.intent(this, new PhotoSettingData(9 //剩余选择图片数量, 3 //选择图片界面显示的列数, PhotoConstant.CAMERA_MODE //图片选择器模式, compressPath //压缩图片路径, true //是否压缩, 90 //质量, 480 //压缩宽, 800 //压缩高, true //是否拍照裁剪, 400 //裁剪宽, 400 //裁剪高));
+
         //选择图片回传数据需要接收
         @Override protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
           super.onActivityResult(requestCode, resultCode, data);
@@ -82,6 +85,7 @@
 * pgv_selectPhotoMode:选择图片模式（camera、photo）
 * pgv_photoResId:展示图片布局内部图片控件id
 * pgv_photoDeleteResId:展示图片布局内部删除id
+* pgv_isCompress:是否压缩图片
 
 PhotoConstant.CAMERA_MODE 拍照模式
 PhotoConstant.PHOTO_MODE 相册模式
