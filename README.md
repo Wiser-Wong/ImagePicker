@@ -39,7 +39,13 @@
              app:pgv_selectPhotoMode="camera"
              app:pgv_selectPhotoSpanCount="3"
              app:pgv_spanCount="4"
-             app:pgv_isCompress="true" />
+             app:pgv_isCompress="true"
+             app:pgv_isCameraCrop="true"
+             app:pgv_compressQuality="90"
+             app:pgv_compressWidth="480"
+             app:pgv_compressHeight="800"
+             app:pgv_cameraCropWidth="500"
+             app:pgv_cameraCropHeight="500" />
   
         由于PhotoGridView控件中点击添加按钮处理了跳转逻辑，所以想要自定义跳转逻辑的同学需要添加监听
         gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
@@ -86,6 +92,12 @@
 * pgv_photoResId:展示图片布局内部图片控件id
 * pgv_photoDeleteResId:展示图片布局内部删除id
 * pgv_isCompress:是否压缩图片
+* pgv_isCameraCrop:是否裁剪拍照图片
+* pgv_compressQuality:压缩质量
+* pgv_compressWidth:压缩宽
+* pgv_compressHeight:压缩高
+* pgv_cameraCropWidth:拍照裁剪宽
+* pgv_cameraCropHeight:拍照裁剪高
 
 PhotoConstant.CAMERA_MODE 拍照模式
 PhotoConstant.PHOTO_MODE 相册模式

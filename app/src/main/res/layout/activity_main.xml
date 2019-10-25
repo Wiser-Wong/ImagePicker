@@ -21,7 +21,13 @@
         app:pgv_selectPhotoMode="camera"
         app:pgv_selectPhotoSpanCount="3"
         app:pgv_spanCount="4"
-        app:pgv_isCompress="true"/>
+        app:pgv_isCompress="true"
+        app:pgv_isCameraCrop="true"
+        app:pgv_compressQuality="90"
+        app:pgv_compressWidth="480"
+        app:pgv_compressHeight="800"
+        app:pgv_cameraCropWidth="500"
+        app:pgv_cameraCropHeight="500"/>
 
     <Button
         android:layout_width="match_parent"

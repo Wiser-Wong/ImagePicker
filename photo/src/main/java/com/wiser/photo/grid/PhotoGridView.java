@@ -47,6 +47,18 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 	private boolean								isCompress;													// 是否压缩
 
+	private boolean								isCameraCrop;												// 是否拍照裁剪
+
+	private int									compressQuality;											// 压缩质量
+
+	private int									compressWidth;												// 压缩宽度
+
+	private int									compressHeight;												// 压缩高度
+
+	private int									cameraCropWidth;											// 拍照裁剪宽度
+
+	private int									cameraCropHeight;											// 拍照裁剪高度
+
 	private PhotoShowAdapter<PhotoShowModel>	photoAdapter;
 
 	private ArrayList<String>					list					= new ArrayList<>();
@@ -79,6 +91,12 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		maxCounts = ta.getInt(R.styleable.PhotoGridView_pgv_maxCounts, maxCounts);
 		isPreview = ta.getBoolean(R.styleable.PhotoGridView_pgv_isPreview, false);
 		isCompress = ta.getBoolean(R.styleable.PhotoGridView_pgv_isCompress, false);
+		isCameraCrop = ta.getBoolean(R.styleable.PhotoGridView_pgv_isCameraCrop, false);
+		compressQuality = ta.getInt(R.styleable.PhotoGridView_pgv_compressQuality, PhotoConstant.DEFAULT_COMPRESS_QUALITY);
+		compressWidth = ta.getInt(R.styleable.PhotoGridView_pgv_compressWidth, PhotoConstant.DEFAULT_COMPRESS_WIDTH);
+		compressHeight = ta.getInt(R.styleable.PhotoGridView_pgv_compressHeight, PhotoConstant.DEFAULT_COMPRESS_HEIGHT);
+		cameraCropWidth = ta.getInt(R.styleable.PhotoGridView_pgv_cameraCropWidth, PhotoConstant.DEFAULT_CROP_WIDTH);
+		cameraCropHeight = ta.getInt(R.styleable.PhotoGridView_pgv_cameraCropHeight, PhotoConstant.DEFAULT_CROP_HEIGHT);
 
 		ta.recycle();
 
@@ -182,8 +200,8 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		if (onPhotoGridListener != null) onPhotoGridListener.onAddClick(view, position);
 		else {
 			if (isCompress) {
-				PhotoSelectActivity.intent((FragmentActivity) getContext(),
-						new PhotoSettingData(maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode, compressPath, true, 90, 480, 800, true, 400, 400));
+				PhotoSelectActivity.intent((FragmentActivity) getContext(), new PhotoSettingData(maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode,
+						compressPath, isCompress, compressQuality, compressWidth, compressHeight, isCameraCrop, cameraCropWidth, cameraCropHeight));
 			} else {
 				PhotoSelectActivity.intent((FragmentActivity) getContext(), maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode);
 			}
