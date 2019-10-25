@@ -196,6 +196,62 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		return list != null ? list.size() : 0;
 	}
 
+	public boolean isCompress() {
+		return isCompress;
+	}
+
+	public void setCompress(boolean compress) {
+		isCompress = compress;
+	}
+
+	public boolean isCameraCrop() {
+		return isCameraCrop;
+	}
+
+	public void setCameraCrop(boolean cameraCrop) {
+		isCameraCrop = cameraCrop;
+	}
+
+	public void setCompressQuality(int compressQuality) {
+		this.compressQuality = compressQuality;
+	}
+
+	public int getCompressQuality() {
+		return compressQuality;
+	}
+
+	public void setCompressWidth(int compressWidth) {
+		this.compressWidth = compressWidth;
+	}
+
+	public int getCompressWidth() {
+		return compressWidth;
+	}
+
+	public void setCompressHeight(int compressHeight) {
+		this.compressHeight = compressHeight;
+	}
+
+	public int getCompressHeight() {
+		return compressHeight;
+	}
+
+	public void setCameraCropWidth(int cameraCropWidth) {
+		this.cameraCropWidth = cameraCropWidth;
+	}
+
+	public int getCameraCropWidth() {
+		return cameraCropWidth;
+	}
+
+	public void setCameraCropHeight(int cameraCropHeight) {
+		this.cameraCropHeight = cameraCropHeight;
+	}
+
+	public int getCameraCropHeight() {
+		return cameraCropHeight;
+	}
+
 	@Override public void onAddPhotoClick(View view, int position) {
 		if (onPhotoGridListener != null) onPhotoGridListener.onAddClick(view, position);
 		else {
