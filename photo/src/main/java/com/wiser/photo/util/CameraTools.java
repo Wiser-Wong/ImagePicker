@@ -2,16 +2,19 @@ package com.wiser.photo.util;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
+import android.widget.Toast;
 
 import com.wiser.photo.PhotoConstant;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * @author Wiser
@@ -53,64 +56,53 @@ public class CameraTools {
 		return mTmpFile;
 	}
 
-	/**
-	 * 调用系统照相机拍照
-	 *
-	 * @param outPath
-	 *            输出路径String
-	 * @param authority
-	 *            7.0以上需要
-	 * @param requestCode
-	 *            请求码
-	 * @return 返回文件绝对路径 file.getAbsolutePath();
-	 */
-	public static String intentCamera(FragmentActivity activity, String outPath, String authority, int requestCode) {
-		if (activity == null) return "";
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			File outDir = new File(outPath);
-			if (!outDir.exists()) {
-				outDir.mkdirs();
-			}
-			File outFile = new File(outDir, System.currentTimeMillis() + ".jpg");
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outFile));
-			else {
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity, authority, outFile));
-			}
-			intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-			activity.startActivityForResult(intent, requestCode);
-			return outFile.getAbsolutePath();
-		}
-		return "";
-	}
+	// 图片裁剪
+	public static Uri cropPhoto(FragmentActivity activity, Uri uri, File imgFile, int cropWidth, int cropHeight, int requestCode) {
+		Uri mCutUri;
+		Intent intent = new Intent("com.android.camera.action.CROP"); // 打开系统自带的裁剪图片的intent
 
-	/**
-	 * 截图方法
-	 *
-	 * @param uri
-	 *            uri
-	 * @param requestCode
-	 *            请求吗
-	 */
-	public static void cropPhoto(FragmentActivity activity, Uri uri, int requestCode) {
-		if (activity == null) return;
-		Intent intent = new Intent("com.android.camera.action.CROP");
+		// 注意一定要添加该项权限，否则会提示无法裁剪
+		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
 		intent.setDataAndType(uri, "image/*");
-		// crop为true是设置在开启的intent中设置显示的view可以剪裁
-		intent.putExtra("crop", "true");
-		// aspectX aspectY 是宽高的比例
+		intent.putExtra("scale", true);
+		// 设置裁剪区域的宽高比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		// intent.putExtra("scale", true);
-		// outputX,outputY 是剪裁图片的宽高
-		intent.putExtra("outputX", 300);
-		intent.putExtra("outputY", 300);
-		// intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-		intent.putExtra("return-data", true);
-		// intent.putExtra("outputFormat",
-		// Bitmap.CompressFormat.JPEG.toString());
-		// intent.putExtra("noFaceDetection", true); // no face detection
-		activity.startActivityForResult(intent, requestCode);
+		// 设置裁剪区域的宽度和高度
+		intent.putExtra("outputX", cropWidth);
+		intent.putExtra("outputY", cropHeight);
+		// 取消人脸识别
+		intent.putExtra("noFaceDetection", true);
+		// 图片输出格式
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+		// 若为false则表示不返回数据
+		intent.putExtra("return-data", false);
+		// 指定裁剪完成以后的图片所保存的位置,pic info显示有延时
+		// if (fromCapture) {
+		// 如果是使用拍照，那么原先的uri和最终目标的uri一致,注意这里的uri必须是Uri.fromFile生成的
+		mCutUri = Uri.fromFile(imgFile);
+		// }
+		// else { // 从相册中选择，那么裁剪的图片保存在take_photo中
+		// String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(new
+		// Date());
+		// String fileName = "photo_" + time;
+		// File mCutFile = new File(Environment.getExternalStorageDirectory() +
+		// "/take_photo", fileName + ".jpeg");
+		// if (!mCutFile.getParentFile().exists()) {
+		// mCutFile.getParentFile().mkdirs();
+		// }
+		// mCutUri = Uri.fromFile(mCutFile);
+		// }
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
+		// 以广播方式刷新系统相册，以便能够在相册中找到刚刚所拍摄和裁剪的照片
+		Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		intentBc.setData(uri);
+		activity.sendBroadcast(intentBc);
+		activity.startActivityForResult(intent, requestCode); // 设置裁剪参数显示图片至ImageVie
+
+		return mCutUri;
 	}
 
 }

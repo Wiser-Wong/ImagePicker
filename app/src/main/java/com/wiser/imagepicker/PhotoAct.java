@@ -2,6 +2,7 @@ package com.wiser.imagepicker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +21,8 @@ public class PhotoAct extends AppCompatActivity {
 		gvPhoto = findViewById(R.id.gv_photo);
 
 		gvPhoto.setMaxCounts(9);
+
+		gvPhoto.setCompressPath(Environment.getExternalStorageDirectory()+"/compress");
 
 //		gvPhoto.setOnPhotoGridListener(new PhotoGridView.OnPhotoGridListener() {
 //			@Override
@@ -47,7 +50,7 @@ public class PhotoAct extends AppCompatActivity {
 	}
 
 	public void openPhoto(View view) {
-		PhotoSelectActivity.intent(this, 0, 4,PhotoConstant.CAMERA_MODE);
+		PhotoSelectActivity.intent(this, 10, 4,PhotoConstant.CAMERA_MODE);
 	}
 
 	@Override protected void onDestroy() {

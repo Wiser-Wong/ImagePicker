@@ -20,7 +20,8 @@
         app:pgv_photoResId="@+id/iv_photo"
         app:pgv_selectPhotoMode="camera"
         app:pgv_selectPhotoSpanCount="3"
-        app:pgv_spanCount="4" />
+        app:pgv_spanCount="4"
+        app:pgv_isCompress="true"/>
 
     <Button
         android:layout_width="match_parent"

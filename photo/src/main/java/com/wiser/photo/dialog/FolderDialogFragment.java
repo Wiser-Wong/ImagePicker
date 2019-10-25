@@ -19,7 +19,6 @@ import com.wiser.photo.R;
 import com.wiser.photo.model.PhotoFolderModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Wiser
@@ -43,7 +42,7 @@ public class FolderDialogFragment extends DialogFragment {
 
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.DefaultDialogTheme);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.FolderDialogTheme);
 	}
 
 	@Nullable @Override public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

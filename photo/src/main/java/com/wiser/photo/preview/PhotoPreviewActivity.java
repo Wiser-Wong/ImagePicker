@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.R;
 import com.wiser.photo.model.PhotoSelectModel;
+import com.wiser.photo.model.PhotoSettingData;
+import com.wiser.photo.util.CompressAsyncTask;
 import com.wiser.photo.weight.SquaredImageView;
 
 import android.animation.Animator;
@@ -30,13 +32,13 @@ import android.widget.TextView;
  * 
  *         图片预览
  */
-public class PhotoPreviewActivity extends FragmentActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class PhotoPreviewActivity extends FragmentActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, CompressAsyncTask.OnCompressListener {
 
-	private SquaredImageView ivPhotoPreviewCheck;
+	private SquaredImageView			ivPhotoPreviewCheck;
 
 	private TextView					tvPhotoPreviewFinish;
 
-	private ViewPager vpPreviewPhoto;
+	private ViewPager					vpPreviewPhoto;
 
 	private PhotoPreviewFragmentAdapter	photoPreviewFragmentAdapter;
 
@@ -50,7 +52,8 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 
 	private LinearLayout				llPhotoPreviewBottom;
 
-	public static void intent(FragmentActivity activity, ArrayList<PhotoSelectModel> models, ArrayList<PhotoSelectModel> selectData, int surplusCount, int index, int type, boolean isCamera) {
+	public static void intent(FragmentActivity activity, ArrayList<PhotoSelectModel> models, ArrayList<PhotoSelectModel> selectData, int surplusCount, int index, int type, boolean isCamera,
+			PhotoSettingData photoSettingData) {
 		if (activity == null) return;
 		Intent intent = new Intent(activity, PhotoPreviewActivity.class);
 		Bundle bundle = new Bundle();
@@ -60,6 +63,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		bundle.putInt(PhotoConstant.PREVIEW_PHOTO_INDEX_KEY, index);
 		bundle.putInt(PhotoConstant.PREVIEW_MODE_KEY, type);
 		bundle.putBoolean(PhotoConstant.SHOW_MODE_KEY, isCamera);
+		bundle.putParcelable(PhotoConstant.SETTING_DATA_KEY, photoSettingData);
 		intent.putExtras(bundle);
 		activity.startActivityForResult(intent, PhotoConstant.PREVIEW_PHOTO);
 	}
@@ -104,7 +108,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		if (id == R.id.iv_photo_preview_back) {// 返回
 			backControl();
 		} else if (id == R.id.tv_photo_preview_finish) {// 完成
-			complete();
+			judgeExecuteCompress();
 		} else if (id == R.id.iv_photo_preview_check) {// 选择
 			iPhotoPreviewBiz.selectPhotoClick(iPhotoPreviewBiz.getPosition());
 		}
@@ -253,6 +257,19 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		finish();
 	}
 
+	public IPhotoPreviewBiz getBiz() {
+		return iPhotoPreviewBiz;
+	}
+
+	// 执行压缩
+	private void judgeExecuteCompress() {
+		if (iPhotoPreviewBiz.isCompress()) {
+			new CompressAsyncTask(PhotoPreviewActivity.this, this).execute(iPhotoPreviewBiz.covertSelectDataStrings(iPhotoPreviewBiz.getSelectData()));
+		} else {
+			complete();
+		}
+	}
+
 	// 完成
 	private void complete() {
 		Intent intent = new Intent();
@@ -264,4 +281,19 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		finish();
 	}
 
+	// 完成
+	private void complete(ArrayList<String> paths) {
+		Intent intent = new Intent();
+		Bundle bundle = new Bundle();
+		bundle.putParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY, iPhotoPreviewBiz.getSelectData());
+		bundle.putStringArrayList(PhotoConstant.INTENT_SELECT_PHOTO_KEY, paths);
+		bundle.putInt(PhotoConstant.PREVIEW_PHOTO_COMPLETE_KEY, PhotoConstant.PREVIEW_PHOTO_COMPLETE_VALUE);
+		intent.putExtras(bundle);
+		setResult(PhotoConstant.PREVIEW_PHOTO, intent);
+		finish();
+	}
+
+	@Override public void compressSuccess(ArrayList<String> paths) {
+		complete(paths);
+	}
 }

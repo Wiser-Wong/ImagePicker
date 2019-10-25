@@ -13,6 +13,10 @@ import java.util.ArrayList;
  */
 public interface IImagePreviewBiz {
 
+	boolean isTitleHide();
+
+	void setTitleHideState(boolean isTitleHide);
+
 	ArrayList<String> getList();
 
 	int getPosition();
@@ -37,12 +41,22 @@ class ImagePreviewBiz implements IImagePreviewBiz {
 
 	private boolean						isChange;
 
+	private boolean						isTitleHide;
+
 	public ImagePreviewBiz(ImagePreviewDialogFragment f, Bundle bundle) {
 		this.fragment = f;
 		if (bundle != null) {
 			position = bundle.getInt(PhotoConstant.PREVIEW_PHOTO_INDEX_KEY);
 			list = bundle.getStringArrayList(PhotoConstant.PREVIEW_PHOTO_PATH_KEY);
 		}
+	}
+
+	@Override public boolean isTitleHide() {
+		return isTitleHide;
+	}
+
+	@Override public void setTitleHideState(boolean isTitleHide) {
+		this.isTitleHide = isTitleHide;
 	}
 
 	@Override public ArrayList<String> getList() {

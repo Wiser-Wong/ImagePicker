@@ -1,9 +1,26 @@
 package com.wiser.photo.select;
 
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.wiser.photo.PhotoConstant;
+import com.wiser.photo.R;
+import com.wiser.photo.dialog.FolderDialogFragment;
+import com.wiser.photo.model.PhotoFolderModel;
+import com.wiser.photo.model.PhotoSelectModel;
+import com.wiser.photo.model.PhotoSettingData;
+import com.wiser.photo.preview.PhotoPreviewActivity;
+import com.wiser.photo.util.CameraTools;
+import com.wiser.photo.util.CompressAsyncTask;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,26 +36,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wiser.photo.PhotoConstant;
-import com.wiser.photo.R;
-import com.wiser.photo.dialog.FolderDialogFragment;
-import com.wiser.photo.model.PhotoFolderModel;
-import com.wiser.photo.model.PhotoSelectModel;
-import com.wiser.photo.preview.PhotoPreviewActivity;
-import com.wiser.photo.util.CameraTools;
-
-import java.io.File;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author Wiser
  * 
  *         选择图片界面
  */
-public class PhotoSelectActivity extends FragmentActivity implements View.OnClickListener {
+public class PhotoSelectActivity extends FragmentActivity implements View.OnClickListener, CompressAsyncTask.OnCompressListener {
 
 	private TextView			tvPhotoSelectFinish;
 
@@ -53,6 +57,7 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		intent.putExtra(PhotoConstant.SURPLUS_COUNT_KEY, surplusCount);
 		intent.putExtra(PhotoConstant.SPAN_COUNT_KEY, spanCount);
 		intent.putExtra(PhotoConstant.SHOW_MODE_KEY, type);
+		intent.putExtra("isObj", false);
 		activity.startActivityForResult(intent, PhotoConstant.SELECT_PHOTO);
 		activity.overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
 	}
@@ -62,6 +67,18 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		Intent intent = new Intent(activity, PhotoSelectActivity.class);
 		intent.putExtra(PhotoConstant.SURPLUS_COUNT_KEY, surplusCount);
 		intent.putExtra(PhotoConstant.SPAN_COUNT_KEY, spanCount);
+		intent.putExtra("isObj", false);
+		activity.startActivityForResult(intent, PhotoConstant.SELECT_PHOTO);
+		activity.overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
+	}
+
+	public static void intent(FragmentActivity activity, PhotoSettingData photoSettingData) {
+		if (activity == null) return;
+		Intent intent = new Intent(activity, PhotoSelectActivity.class);
+		intent.putExtra("isObj", true);
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(PhotoConstant.SETTING_DATA_KEY, photoSettingData);
+		intent.putExtras(bundle);
 		activity.startActivityForResult(intent, PhotoConstant.SELECT_PHOTO);
 		activity.overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
 	}
@@ -81,13 +98,18 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		tvPhotoSelectFinish.setOnClickListener(this);
 		tvAllPhotoFolder.setOnClickListener(this);
 
-		iPhotoSelectBiz = new PhotoSelectBiz(getIntent() != null ? getIntent().getIntExtra(PhotoConstant.SURPLUS_COUNT_KEY, 0) : 0,
-				getIntent() != null && getIntent().getIntExtra(PhotoConstant.SHOW_MODE_KEY, -1) == PhotoConstant.CAMERA_MODE);
+		if (getIntent() != null) {
+			if (!getIntent().getBooleanExtra("isObj", false)) {
+				iPhotoSelectBiz = new PhotoSelectBiz(getIntent() != null ? getIntent().getIntExtra(PhotoConstant.SURPLUS_COUNT_KEY, 0) : 0,
+						getIntent() != null ? getIntent().getIntExtra(PhotoConstant.SPAN_COUNT_KEY, PhotoConstant.DEFAULT_SPAN_COUNT) : PhotoConstant.DEFAULT_SPAN_COUNT,
+						getIntent() != null && getIntent().getIntExtra(PhotoConstant.SHOW_MODE_KEY, -1) == PhotoConstant.CAMERA_MODE);
+			} else {
+				iPhotoSelectBiz = new PhotoSelectBiz(
+						(getIntent() != null && getIntent().getExtras() != null) ? (PhotoSettingData) (getIntent().getExtras().getParcelable(PhotoConstant.SETTING_DATA_KEY)) : null);
+			}
+		} else iPhotoSelectBiz = new PhotoSelectBiz();
 
-		rlvPhotoSelect.setLayoutManager(new GridLayoutManager(this,
-				getIntent() != null ? (getIntent().getIntExtra(PhotoConstant.SPAN_COUNT_KEY, PhotoConstant.DEFAULT_SPAN_COUNT) > 0
-						? getIntent().getIntExtra(PhotoConstant.SPAN_COUNT_KEY, PhotoConstant.DEFAULT_SPAN_COUNT)
-						: PhotoConstant.DEFAULT_SPAN_COUNT) : PhotoConstant.DEFAULT_SPAN_COUNT));
+		rlvPhotoSelect.setLayoutManager(new GridLayoutManager(this, iPhotoSelectBiz.getSpanCount()));
 		rlvPhotoSelect.setAdapter(photoSelectAdapter = new PhotoSelectAdapter(this));
 
 		requestPermission();
@@ -191,9 +213,9 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 			overridePendingTransition(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
 		} else if (id == R.id.tv_photo_select_preview) {// 预览
 			PhotoPreviewActivity.intent(this, photoSelectAdapter.getSelectData(), photoSelectAdapter.getSelectData(), iPhotoSelectBiz.getSurplusCount(), 0, PhotoConstant.PREVIEW_BTN_MODE,
-					iPhotoSelectBiz.isCamera());
+					iPhotoSelectBiz.isCamera(), iPhotoSelectBiz.getPhotoSettingData());
 		} else if (id == R.id.tv_photo_select_finish) {// 完成
-			complete();
+			judgeExecuteCompress();
 		} else if (id == R.id.tv_all_photo_folder) {// 全部相册
 			FolderDialogFragment.newInstance(iPhotoSelectBiz.getFolderModels(), new FolderDialogFragment.OnFolderClickListener() {
 
@@ -222,11 +244,29 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		}
 	}
 
+	// 执行压缩
+	private void judgeExecuteCompress() {
+		if (iPhotoSelectBiz.getPhotoSettingData() != null && iPhotoSelectBiz.getPhotoSettingData().isCompress) {
+			new CompressAsyncTask(PhotoSelectActivity.this, this).execute(iPhotoSelectBiz.covertSelectDataStrings(photoSelectAdapter.getSelectData()));
+		} else {
+			complete();
+		}
+	}
+
+	// 完成
+	private void complete(ArrayList<String> paths) {
+		Log.d(PhotoSelectActivity.class.getName(), "选择的路径：-->>" + (paths != null ? Arrays.toString(paths.toArray()) : ""));
+		Intent intent = new Intent();
+		intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, paths);
+		setResult(PhotoConstant.SELECT_PHOTO, intent);
+		this.finish();
+	}
+
 	// 完成
 	private void complete() {
 		Log.d(PhotoSelectActivity.class.getName(), "选择的路径：-->>" + Arrays.toString(photoSelectAdapter.getSelectData().toArray()));
 		Intent intent = new Intent();
-		intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, iPhotoSelectBiz.covertSelectData(photoSelectAdapter.getSelectData()));
+		intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, iPhotoSelectBiz.covertSelectDataList(photoSelectAdapter.getSelectData()));
 		setResult(PhotoConstant.SELECT_PHOTO, intent);
 		this.finish();
 	}
@@ -240,7 +280,11 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 					if (bundle.getInt(PhotoConstant.PREVIEW_PHOTO_COMPLETE_KEY, -1) == PhotoConstant.PREVIEW_PHOTO_COMPLETE_VALUE) {
 						ArrayList<PhotoSelectModel> selectData = bundle.getParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY);
 						if (photoSelectAdapter != null) photoSelectAdapter.setSelectData(selectData);
-						complete();
+						if (iPhotoSelectBiz.getPhotoSettingData() != null && iPhotoSelectBiz.getPhotoSettingData().isCompress) {
+							complete(bundle.getStringArrayList(PhotoConstant.INTENT_SELECT_PHOTO_KEY));
+						} else {
+							complete();
+						}
 					} else {
 						ArrayList<PhotoSelectModel> models = bundle.getParcelableArrayList(PhotoConstant.INTENT_SELECT_PHOTO_KEY);
 						ArrayList<PhotoSelectModel> selectData = bundle.getParcelableArrayList(PhotoConstant.PREVIEW_PHOTO_SELECT_DATA_KEY);
@@ -268,30 +312,32 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		}
 		// 拍照
 		if (resultCode == RESULT_OK && requestCode == PhotoConstant.CAMERA_REQUEST_CODE) {
-			// Uri uri;
-			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) uri = Uri.fromFile(new
-			// File(iPhotoSelectBiz.getOutFilePath()));
-			// else uri = FileProvider.getUriForFile(this, PhotoConstant.AUTHORITY, new
-			// File(iPhotoSelectBiz.getOutFilePath()));
-			// CameraTools.cropPhoto(this, uri, PhotoConstant.CROP_REQUEST_CODE);
+			if (iPhotoSelectBiz.getPhotoSettingData() != null && iPhotoSelectBiz.getPhotoSettingData().isCameraCrop) {
+				Uri uri;
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) uri = Uri.fromFile(new File(iPhotoSelectBiz.getOutFilePath()));
+				else uri = FileProvider.getUriForFile(this, PhotoConstant.AUTHORITY, new File(iPhotoSelectBiz.getOutFilePath()));
+				CameraTools.cropPhoto(this, uri, new File(iPhotoSelectBiz.getOutFilePath()),
+						iPhotoSelectBiz.getPhotoSettingData() != null ? iPhotoSelectBiz.getPhotoSettingData().cropWidth : PhotoConstant.DEFAULT_CROP_WIDTH,
+						iPhotoSelectBiz.getPhotoSettingData() != null ? iPhotoSelectBiz.getPhotoSettingData().cropHeight : PhotoConstant.DEFAULT_CROP_HEIGHT, PhotoConstant.CROP_REQUEST_CODE);
+			} else {
+				ArrayList<String> photos = new ArrayList<>();
+				photos.add(iPhotoSelectBiz.getOutFilePath());
+				Intent intent = new Intent();
+				intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, photos);
+				setResult(PhotoConstant.SELECT_PHOTO, intent);
+				this.finish();
+			}
+
+		}
+
+		// 裁剪
+		if (requestCode == PhotoConstant.CROP_REQUEST_CODE) {
 			ArrayList<String> photos = new ArrayList<>();
 			photos.add(iPhotoSelectBiz.getOutFilePath());
 			Intent intent = new Intent();
 			intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, photos);
 			setResult(PhotoConstant.SELECT_PHOTO, intent);
 			this.finish();
-		}
-
-		// 裁剪
-		if (requestCode == PhotoConstant.CROP_REQUEST_CODE) {
-			if (data != null) {
-				ArrayList<String> photos = new ArrayList<>();
-				if (data.getData() != null) photos.add(data.getData().getPath());
-				Intent intent = new Intent();
-				intent.putStringArrayListExtra(PhotoConstant.INTENT_SELECT_PHOTO_KEY, photos);
-				setResult(PhotoConstant.SELECT_PHOTO, intent);
-				this.finish();
-			}
 		}
 	}
 
@@ -303,4 +349,8 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		photoSelectAdapter = null;
 	}
 
+	// 压缩完成
+	@Override public void compressSuccess(ArrayList<String> paths) {
+		complete(paths);
+	}
 }

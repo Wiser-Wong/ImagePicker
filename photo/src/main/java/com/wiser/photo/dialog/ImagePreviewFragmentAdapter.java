@@ -17,7 +17,7 @@ public class ImagePreviewFragmentAdapter extends FragmentStatePagerAdapter {
 
 	private ArrayList<String> paths;
 
-	ImagePreviewFragmentAdapter(FragmentManager fm, ArrayList<String> paths) {
+	public ImagePreviewFragmentAdapter(FragmentManager fm, ArrayList<String> paths) {
 		super(fm);
 		this.paths = paths;
 	}

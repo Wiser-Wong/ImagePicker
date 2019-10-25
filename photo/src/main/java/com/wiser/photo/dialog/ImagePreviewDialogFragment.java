@@ -1,5 +1,9 @@
 package com.wiser.photo.dialog;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wiser.photo.PhotoConstant;
@@ -27,6 +32,8 @@ import java.util.ArrayList;
  *         预览图片
  */
 public class ImagePreviewDialogFragment extends DialogFragment implements View.OnClickListener, ViewPager.OnPageChangeListener, DialogInterface.OnKeyListener {
+
+	private RelativeLayout				rlImagePreviewTilte;
 
 	private TextView					tvPreviewCount;
 
@@ -50,7 +57,7 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.DefaultDialogTheme);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.PreviewPhotoDialogTheme);
 	}
 
 	@Nullable @Override public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +74,7 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 			getDialog().setOnKeyListener(this);
 		}
 
+		rlImagePreviewTilte = view.findViewById(R.id.rl_image_preview_title);
 		vpPreviewPhoto = view.findViewById(R.id.vp_preview_image);
 		tvPreviewCount = view.findViewById(R.id.tv_image_preview_count);
 
@@ -152,7 +160,12 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 		if (id == R.id.iv_image_preview_back) {// 返回
 			dismiss();
 		} else if (id == R.id.iv_image_preview_delete) {// 删除
-			iImagePreviewBiz.delete();
+			DeletePhotoDialogFragment.newInstance(new DeletePhotoDialogFragment.OnDeleteListener() {
+
+				@Override public void delete() {
+					iImagePreviewBiz.delete();
+				}
+			}).show(getChildFragmentManager(), DeletePhotoDialogFragment.class.getName());
 		}
 	}
 
@@ -160,6 +173,33 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 	public void updatePreviewCountUi() {
 		if (iImagePreviewBiz.getList() != null && iImagePreviewBiz.getList().size() > iImagePreviewBiz.getPosition())
 			tvPreviewCount.setText(MessageFormat.format("{0}/{1}", iImagePreviewBiz.getPosition() + 1, iImagePreviewBiz.getList().size()));
+	}
+
+	// 更新title显示隐藏
+	public void updateTitleAnim() {
+		int animatorId;
+		if (iImagePreviewBiz.isTitleHide()) {
+			iImagePreviewBiz.setTitleHideState(false);
+			animatorId = R.animator.alpha_show;
+		} else {
+			iImagePreviewBiz.setTitleHideState(true);
+			animatorId = R.animator.alpha_hide;
+		}
+		ObjectAnimator anim1 = (ObjectAnimator) AnimatorInflater.loadAnimator(getActivity(), animatorId);
+		anim1.setTarget(rlImagePreviewTilte);
+		anim1.addListener(new AnimatorListenerAdapter() {
+
+			@Override public void onAnimationStart(Animator animation) {
+				super.onAnimationStart(animation);
+				rlImagePreviewTilte.setVisibility(View.VISIBLE);
+			}
+
+			@Override public void onAnimationEnd(Animator animation) {
+				super.onAnimationEnd(animation);
+				if (iImagePreviewBiz.isTitleHide()) rlImagePreviewTilte.setVisibility(View.GONE);
+			}
+		});
+		anim1.start();
 	}
 
 	@Override public void onPageScrolled(int i, float v, int i1) {

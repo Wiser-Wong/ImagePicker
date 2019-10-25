@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.R;
+import com.wiser.photo.dialog.ImagePreviewDialogFragment;
 import com.wiser.photo.model.PhotoSelectModel;
 import com.wiser.photo.photoview.PhotoView;
 import com.wiser.photo.photoview.PhotoViewAttache;
@@ -60,11 +61,16 @@ public class PhotoPreviewFragment extends Fragment {
 		}
 
 		((PhotoView) view).setOnViewTapListener(new PhotoViewAttache.OnViewTapListener() {
-			@Override
-			public void onViewTap(View view, float x, float y) {
+
+			@Override public void onViewTap(View view, float x, float y) {
 				if (activity != null) {
 					if (activity instanceof PhotoPreviewActivity) {
 						((PhotoPreviewActivity) activity).updateTitleAnim();
+					} else {
+						ImagePreviewDialogFragment imagePreviewDialogFragment = (ImagePreviewDialogFragment) activity.getSupportFragmentManager().findFragmentByTag(ImagePreviewDialogFragment.class.getName());
+						if (imagePreviewDialogFragment != null) {
+							imagePreviewDialogFragment.updateTitleAnim();
+						}
 					}
 				}
 			}

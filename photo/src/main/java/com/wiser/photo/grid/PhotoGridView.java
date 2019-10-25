@@ -1,5 +1,19 @@
 package com.wiser.photo.grid;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.wiser.photo.PhotoConstant;
+import com.wiser.photo.R;
+import com.wiser.photo.base.BasePhotoAdapter;
+import com.wiser.photo.config.PhotoConfig;
+import com.wiser.photo.dialog.ImagePreviewDialogFragment;
+import com.wiser.photo.model.PhotoSettingData;
+import com.wiser.photo.model.PhotoShowModel;
+import com.wiser.photo.select.PhotoSelectActivity;
+import com.wiser.photo.util.FileCache;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
@@ -9,17 +23,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.wiser.photo.PhotoConstant;
-import com.wiser.photo.R;
-import com.wiser.photo.base.BasePhotoAdapter;
-import com.wiser.photo.config.PhotoConfig;
-import com.wiser.photo.dialog.ImagePreviewDialogFragment;
-import com.wiser.photo.model.PhotoShowModel;
-import com.wiser.photo.select.PhotoSelectActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Wiser
@@ -40,13 +43,19 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 	private int									maxCounts				= 9;
 
-	private boolean								isPreview;
+	private boolean								isPreview;													// 是否预览
+
+	private boolean								isCompress;													// 是否压缩
 
 	private PhotoShowAdapter<PhotoShowModel>	photoAdapter;
 
 	private ArrayList<String>					list					= new ArrayList<>();
 
 	private OnPhotoGridListener					onPhotoGridListener;
+
+	private static final String					COMPRESS_PATH_NAME		= "compress";
+
+	private String								compressPath;												// 压缩路径
 
 	public PhotoGridView(@NonNull Context context) {
 		super(context);
@@ -69,6 +78,7 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		selectPhotoMode = ta.getInt(R.styleable.PhotoGridView_pgv_selectPhotoMode, selectPhotoMode);
 		maxCounts = ta.getInt(R.styleable.PhotoGridView_pgv_maxCounts, maxCounts);
 		isPreview = ta.getBoolean(R.styleable.PhotoGridView_pgv_isPreview, false);
+		isCompress = ta.getBoolean(R.styleable.PhotoGridView_pgv_isCompress, false);
 
 		ta.recycle();
 
@@ -95,6 +105,13 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 		photoAdapter.setOnPhotoItemClickListener(this);
 		photoAdapter.setItems(new ArrayList<PhotoShowModel>());
+
+		if (isCompress) {
+			// Android-data-包名-files-compressPhoto-
+			compressPath = FileCache.configureFileDir(getContext()) + File.separator + COMPRESS_PATH_NAME + File.separator;
+			if (!new File(compressPath).exists()) FileCache.createFilesDirFolder(getContext(), COMPRESS_PATH_NAME);
+		}
+
 	}
 
 	public void setItems(List<PhotoShowModel> list) {
@@ -109,6 +126,11 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		this.onPhotoGridListener = onPhotoGridListener;
 	}
 
+	public void setCompressPath(String compressPath) {
+		this.compressPath = compressPath;
+		FileCache.createFolder(compressPath);
+	}
+
 	// 设置数据
 	public void setPhotoData(ArrayList<String> list) {
 		if (list == null) return;
@@ -121,6 +143,11 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 		if (list == null || adapter() == null) return;
 		list.remove(position);
 		adapter().delete(position);
+	}
+
+	// 清楚压缩的图片
+	public void clearCompressPhoto() {
+		FileCache.clearFolder(compressPath);
 	}
 
 	private ArrayList<PhotoShowModel> getModels(ArrayList<String> list) {
@@ -153,7 +180,14 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 
 	@Override public void onAddPhotoClick(View view, int position) {
 		if (onPhotoGridListener != null) onPhotoGridListener.onAddClick(view, position);
-		else PhotoSelectActivity.intent((FragmentActivity) getContext(), maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode);
+		else {
+			if (isCompress) {
+				PhotoSelectActivity.intent((FragmentActivity) getContext(),
+						new PhotoSettingData(maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode, compressPath, true, 90, 480, 800, true, 400, 400));
+			} else {
+				PhotoSelectActivity.intent((FragmentActivity) getContext(), maxCounts > getCount() ? maxCounts - getCount() : 0, selectPhotoSpanCount, selectPhotoMode);
+			}
+		}
 	}
 
 	@Override public void onItemPhotoClick(View view, int position) {
@@ -181,6 +215,7 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 	public void onDetach() {
 		if (list != null) list.clear();
 		list = null;
+		clearCompressPhoto();
 	}
 
 	public interface OnPhotoGridListener {

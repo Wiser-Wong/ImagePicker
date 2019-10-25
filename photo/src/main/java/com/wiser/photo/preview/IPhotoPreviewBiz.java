@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.model.PhotoSelectModel;
+import com.wiser.photo.model.PhotoSettingData;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,8 @@ public interface IPhotoPreviewBiz {
 
 	boolean isCamera();
 
+	boolean isCompress();
+
 	boolean isNoBtnPreview();
 
 	boolean isTitleHide();
@@ -44,6 +47,10 @@ public interface IPhotoPreviewBiz {
 	void initSelectPhoto();
 
 	void selectPhotoClick(int position);
+
+	PhotoSettingData getPhotoSettingData();
+
+	String[] covertSelectDataStrings(ArrayList<PhotoSelectModel> models);
 
 	void onDetach();
 
@@ -65,6 +72,8 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 
 	private boolean						isCamera;
 
+	private PhotoSettingData			photoSettingData;
+
 	private boolean						isNoBtnPreview;
 
 	private int							type	= PhotoConstant.PREVIEW_PHOTO_MODE;
@@ -80,6 +89,7 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 			this.surplusCount = bundle.getInt(PhotoConstant.SURPLUS_COUNT_KEY);
 			this.type = bundle.getInt(PhotoConstant.PREVIEW_MODE_KEY, PhotoConstant.PREVIEW_PHOTO_MODE);
 			isCamera = bundle.getBoolean(PhotoConstant.SHOW_MODE_KEY, false);
+			photoSettingData = bundle.getParcelable(PhotoConstant.SETTING_DATA_KEY);
 			this.count = selectData != null ? selectData.size() : 0;
 			this.isNoBtnPreview = type != PhotoConstant.PREVIEW_BTN_MODE;
 			if (isCamera && isNoBtnPreview) {
@@ -137,6 +147,10 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 		return isCamera;
 	}
 
+	@Override public boolean isCompress() {
+		return photoSettingData != null && photoSettingData.isCompress;
+	}
+
 	@Override public boolean isNoBtnPreview() {
 		return isNoBtnPreview;
 	}
@@ -181,6 +195,20 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 
 	}
 
+	@Override public PhotoSettingData getPhotoSettingData() {
+		return photoSettingData;
+	}
+
+	@Override public String[] covertSelectDataStrings(ArrayList<PhotoSelectModel> models) {
+		if (models == null) return null;
+		String[] selectData = new String[models.size()];
+		for (int i = 0; i < models.size(); i++) {
+			if (models.get(i) == null) continue;
+			selectData[i] = models.get(i).path;
+		}
+		return selectData;
+	}
+
 	// 移除选择
 	private void remove(PhotoSelectModel photoSelectModel) {
 		if (photoSelectModel == null || selectData == null || selectData.size() == 0) return;
@@ -199,6 +227,7 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 		if (selectData != null) selectData.clear();
 		selectData = null;
 		activity = null;
+		photoSettingData = null;
 	}
 
 }

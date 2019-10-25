@@ -105,7 +105,7 @@ public class PhotoSelectAdapter extends BasePhotoAdapter<PhotoSelectModel, BaseP
 
 					@Override public void onClick(View v) {
 						PhotoPreviewActivity.intent((FragmentActivity) getContext(), (ArrayList<PhotoSelectModel>) getItems(), selectData, surplusCount, position, PhotoConstant.PREVIEW_PHOTO_MODE,
-								iPhotoSelectBiz.isCamera());
+								iPhotoSelectBiz.isCamera(), iPhotoSelectBiz.getPhotoSettingData());
 					}
 				});
 			}
@@ -173,8 +173,8 @@ public class PhotoSelectAdapter extends BasePhotoAdapter<PhotoSelectModel, BaseP
 
 		@Override public void bindData(PhotoSelectModel photoSelectModel, int position) {
 			itemView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+
+				@Override public void onClick(View v) {
 					((PhotoSelectActivity) getContext()).requestCameraPermission();
 				}
 			});

@@ -13,6 +13,9 @@ public interface PhotoConstant {
 	// 拍照权限请求码
 	int		PERMISSION_CAMERA_REQUEST_CODE	= 1101;
 
+	// 设置数据Key
+	String	SETTING_DATA_KEY				= "SETTING_DATA_KEY";
+
 	// 剩余可选数量Key
 	String	SURPLUS_COUNT_KEY				= "SURPLUS_COUNT_KEY";
 
@@ -27,6 +30,9 @@ public interface PhotoConstant {
 
 	// 预览图片地址key
 	String	PREVIEW_IMAGE_PATH_KEY			= "PREVIEW_IMAGE_PATH_KEY";
+
+	// 预览图片是否删除改变key
+	String	PREVIEW_IMAGE_IS_CHANGE_KEY		= "PREVIEW_IMAGE_IS_CHANGE_KEY";
 
 	// 选择图片数量key
 	String	SELECT_PHOTO_COUNT_KEY			= "SELECT_PHOTO_COUNT_KEY";
@@ -75,6 +81,21 @@ public interface PhotoConstant {
 
 	// 裁剪请求码
 	int		CROP_REQUEST_CODE				= 120;
+
+	// 默认压缩质量
+	int		DEFAULT_COMPRESS_QUALITY		= 100;
+
+	// 默认压缩宽
+	int		DEFAULT_COMPRESS_WIDTH			= 480;
+
+	// 默认压缩高
+	int		DEFAULT_COMPRESS_HEIGHT			= 800;
+
+	// 默认裁剪宽
+	int		DEFAULT_CROP_WIDTH				= 800;
+
+	// 默认裁剪高
+	int		DEFAULT_CROP_HEIGHT				= 800;
 
 	String	AUTHORITY						= "com.wiser.photo.fileprovider";
 }

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.model.PhotoFolderModel;
 import com.wiser.photo.model.PhotoSelectModel;
+import com.wiser.photo.model.PhotoSettingData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public interface IPhotoSelectBiz {
 
 	int getSurplusCount();
 
+	int getSpanCount();
+
+	PhotoSettingData getPhotoSettingData();
+
 	ArrayList<PhotoSelectModel> getModels();
 
 	void setModels(ArrayList<PhotoSelectModel> models);
@@ -51,7 +56,9 @@ public interface IPhotoSelectBiz {
 
 	boolean isCamera();
 
-	ArrayList<String> covertSelectData(ArrayList<PhotoSelectModel> models);
+	ArrayList<String> covertSelectDataList(ArrayList<PhotoSelectModel> models);
+
+	String[] covertSelectDataStrings(ArrayList<PhotoSelectModel> models);
 
 	String getOutFilePath();
 
@@ -73,19 +80,42 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 
 	private int									surplusCount;
 
+	private int									spanCount				= PhotoConstant.DEFAULT_SPAN_COUNT;
+
 	private boolean								isCamera;
 
-	private String								currentFolderPathType	= ALL;				// 文件夹路径 用于解决 不同文件夹下位置选中与未选中
+	private String								currentFolderPathType	= ALL;								// 文件夹路径 用于解决 不同文件夹下位置选中与未选中
 
 	private String								outFilePath;
 
-	PhotoSelectBiz(int surplusCount, boolean isCamera) {
+	private PhotoSettingData					photoSettingData;
+
+	PhotoSelectBiz() {}
+
+	PhotoSelectBiz(int surplusCount, int spanCount, boolean isCamera) {
 		this.surplusCount = surplusCount;
+		this.spanCount = spanCount;
 		this.isCamera = isCamera;
+	}
+
+	PhotoSelectBiz(PhotoSettingData photoSettingData) {
+		if (photoSettingData != null) {
+			this.photoSettingData = photoSettingData;
+			this.surplusCount = photoSettingData.surplusCount;
+			this.isCamera = (photoSettingData.type == PhotoConstant.CAMERA_MODE);
+		}
 	}
 
 	@Override public int getSurplusCount() {
 		return surplusCount;
+	}
+
+	@Override public int getSpanCount() {
+		return spanCount;
+	}
+
+	@Override public PhotoSettingData getPhotoSettingData() {
+		return photoSettingData;
 	}
 
 	@Override public ArrayList<PhotoSelectModel> getModels() {
@@ -120,11 +150,21 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 		return isCamera;
 	}
 
-	@Override public ArrayList<String> covertSelectData(ArrayList<PhotoSelectModel> models) {
+	@Override public ArrayList<String> covertSelectDataList(ArrayList<PhotoSelectModel> models) {
 		ArrayList<String> selectData = new ArrayList<>();
 		for (PhotoSelectModel model : models) {
 			if (model == null) continue;
 			selectData.add(model.path);
+		}
+		return selectData;
+	}
+
+	@Override public String[] covertSelectDataStrings(ArrayList<PhotoSelectModel> models) {
+		if (models == null) return null;
+		String[] selectData = new String[models.size()];
+		for (int i = 0; i < models.size(); i++) {
+			if (models.get(i) == null) continue;
+			selectData[i] = models.get(i).path;
 		}
 		return selectData;
 	}
