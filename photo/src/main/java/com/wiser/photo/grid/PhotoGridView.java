@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.InflateException;
 import android.view.View;
 
 /**
@@ -104,8 +105,8 @@ public class PhotoGridView extends RecyclerView implements BasePhotoAdapter.OnPh
 	}
 
 	private PhotoConfig photoConfig() {
-		if (addLayoutId == -1 || photoLayoutId == -1) throw new IllegalArgumentException("请设置展示的添加布局或者图片布局ID");
-		if (photoResId == -1) throw new IllegalArgumentException("请设置展示的图片布局内部图片控件ID");
+		if (addLayoutId == -1 || photoLayoutId == -1) throw new InflateException("请设置展示的添加布局或者图片布局ID");
+		if (photoResId == -1) throw new InflateException("请设置展示的图片布局内部图片控件ID");
 		PhotoConfig photoConfig = new PhotoConfig();
 		photoConfig.addLayoutId = addLayoutId;
 		photoConfig.photoLayoutId = photoLayoutId;
