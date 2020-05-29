@@ -3,38 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="#F5F5F5">
+    android:background="#3C3C3C">
 
-    <TextView
-        android:id="@+id/tv_all_photo_folder"
+    <LinearLayout
+        android:id="@+id/ll_photo_select"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_height="30dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:gravity="center"
-        android:text="全部相册"
-        android:textColor="#000000"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:gravity="center"
-        android:text="相机胶卷"
-        android:textColor="#000000"
-        android:textSize="17sp"
-        android:textStyle="bold"
+        android:background="@drawable/shape_select_folder_bg"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_photo_folder_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="所有图片"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <com.wiser.photo.weight.RotateAnimImageView
+            android:id="@+id/iv_photo_select_arrow"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="0.5dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/photo_select_arrow" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_photo_select_cancel"
@@ -44,8 +50,8 @@
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:text="取消"
-        android:textColor="#000000"
-        android:textSize="15sp"
+        android:textColor="#ffffff"
+        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

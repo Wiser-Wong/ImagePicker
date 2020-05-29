@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class ImagePreviewDialogFragment extends DialogFragment implements View.OnClickListener, ViewPager.OnPageChangeListener, DialogInterface.OnKeyListener {
 
-	private RelativeLayout				rlImagePreviewTilte;
+	private RelativeLayout 				rlImagePreviewTitle;
 
 	private TextView					tvPreviewCount;
 
@@ -74,7 +74,7 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 			getDialog().setOnKeyListener(this);
 		}
 
-		rlImagePreviewTilte = view.findViewById(R.id.rl_image_preview_title);
+		rlImagePreviewTitle = view.findViewById(R.id.rl_image_preview_title);
 		vpPreviewPhoto = view.findViewById(R.id.vp_preview_image);
 		tvPreviewCount = view.findViewById(R.id.tv_image_preview_count);
 
@@ -186,17 +186,17 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 			animatorId = R.animator.alpha_hide;
 		}
 		ObjectAnimator anim1 = (ObjectAnimator) AnimatorInflater.loadAnimator(getActivity(), animatorId);
-		anim1.setTarget(rlImagePreviewTilte);
+		anim1.setTarget(rlImagePreviewTitle);
 		anim1.addListener(new AnimatorListenerAdapter() {
 
 			@Override public void onAnimationStart(Animator animation) {
 				super.onAnimationStart(animation);
-				rlImagePreviewTilte.setVisibility(View.VISIBLE);
+				rlImagePreviewTitle.setVisibility(View.VISIBLE);
 			}
 
 			@Override public void onAnimationEnd(Animator animation) {
 				super.onAnimationEnd(animation);
-				if (iImagePreviewBiz.isTitleHide()) rlImagePreviewTilte.setVisibility(View.GONE);
+				if (iImagePreviewBiz.isTitleHide()) rlImagePreviewTitle.setVisibility(View.GONE);
 			}
 		});
 		anim1.start();

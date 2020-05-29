@@ -159,9 +159,9 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 	// 初始化已经选择的图片UI
 	public void updateUi(boolean isSelect) {
 		if (isSelect) {
-			ivPhotoPreviewCheck.setBackgroundResource(R.mipmap.photo_selected);
+			ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_selected);
 		} else {
-			ivPhotoPreviewCheck.setBackgroundResource(R.mipmap.photo_unselected);
+			ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_unselected);
 		}
 
 		updateBtnStateUi();
@@ -232,8 +232,8 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 	@Override public void onPageSelected(int i) {
 		iPhotoPreviewBiz.setPosition(i);
 		smallPhotoAdapter.setIndex(iPhotoPreviewBiz.getList() != null && iPhotoPreviewBiz.getList().size() > i ? iPhotoPreviewBiz.getList().get(i).position : -1);
-		if (iPhotoPreviewBiz.isSelect(i)) ivPhotoPreviewCheck.setBackgroundResource(R.mipmap.photo_selected);
-		else ivPhotoPreviewCheck.setBackgroundResource(R.mipmap.photo_unselected);
+		if (iPhotoPreviewBiz.isSelect(i)) ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_selected);
+		else ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_unselected);
 	}
 
 	@Override public void onPageScrollStateChanged(int i) {

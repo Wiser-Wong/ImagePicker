@@ -113,10 +113,10 @@ public class PhotoSelectAdapter extends BasePhotoAdapter<PhotoSelectModel, BaseP
 			Glide.with(ivSelectPhoto.getContext()).load(photoSelectModel.path).thumbnail(0.1f).centerCrop().into(ivSelectPhoto);
 
 			if (photoSelectModel.isSelect) {
-				ivPhotoSelectCheck.setBackgroundResource(R.mipmap.photo_selected);
+				ivPhotoSelectCheck.setBackgroundResource(R.drawable.photo_selected);
 				flCover.setVisibility(View.GONE);
 			} else {
-				ivPhotoSelectCheck.setBackgroundResource(R.mipmap.photo_unselected);
+				ivPhotoSelectCheck.setBackgroundResource(R.drawable.photo_unselected);
 				if (((PhotoSelectActivity) getContext()).getBiz().getSurplusCount() == count) {
 					flCover.setVisibility(View.VISIBLE);
 				} else {

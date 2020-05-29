@@ -11,5 +11,5 @@
         android:layout_height="68dp"
         android:adjustViewBounds="true"
         android:padding="3dp"
-        android:src="@mipmap/photo_error" />
+        android:src="@drawable/photo_error" />
 </com.wiser.photo.weight.SquareFrameLayout>

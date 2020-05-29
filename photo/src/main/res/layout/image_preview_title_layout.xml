@@ -12,7 +12,7 @@
         android:adjustViewBounds="true"
         android:padding="13dp"
         android:layout_centerVertical="true"
-        android:src="@mipmap/photo_back_black_arrow" />
+        android:src="@drawable/photo_back_black_arrow" />
 
     <TextView
         android:id="@+id/tv_image_preview_count"
@@ -32,7 +32,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
         android:adjustViewBounds="true"
-        android:background="@mipmap/photo_preview_delete_icon"
+        android:background="@drawable/photo_preview_delete_icon"
         android:padding="11dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

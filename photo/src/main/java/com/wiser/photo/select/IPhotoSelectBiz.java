@@ -254,6 +254,8 @@ class PhotoSelectBiz implements IPhotoSelectBiz {
 		folder.folderPath = ALL;
 		folder.folderCover = isCamera ? ((images != null && images.size() > 1) ? images.get(1) : null) : ((images != null && images.size() > 0) ? images.get(0) : null);
 		folderPhotos.add(0, folder);
+
+		activity.loadFolderLayout(folderPhotos);
 	}
 
 	/**

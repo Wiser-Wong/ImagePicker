@@ -6,5 +6,5 @@
     android:layout_gravity="center"
     android:adjustViewBounds="true"
     android:scaleType="fitCenter"
-    android:src="@mipmap/photo_error"/>
+    android:src="@drawable/photo_error"/>
 

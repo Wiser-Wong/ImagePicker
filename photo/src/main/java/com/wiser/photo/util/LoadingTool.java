@@ -4,6 +4,11 @@ import android.support.v4.app.FragmentActivity;
 
 import com.wiser.photo.loading.LoadingDialogFragment;
 
+/**
+ * @author Wiser
+ *
+ * 			loading
+ */
 public class LoadingTool {
 
 	/**

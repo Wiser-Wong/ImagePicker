@@ -1,4 +1,4 @@
-package com.wiser.photo.dialog;
+package com.wiser.photo.select;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -22,13 +22,13 @@ import java.text.MessageFormat;
  */
 public class FolderAdapter extends BasePhotoAdapter<PhotoFolderModel, FolderAdapter.FolderHolder> {
 
-	private FolderDialogFragment.OnFolderClickListener onFolderClickListener;
+	private PhotoSelectFolderFragment.OnFolderClickListener onFolderClickListener;
 
-	FolderAdapter(Context context) {
+	public FolderAdapter(Context context) {
 		super(context);
 	}
 
-	void setOnFolderClickListener(FolderDialogFragment.OnFolderClickListener onFolderClickListener) {
+	public void setOnFolderClickListener(PhotoSelectFolderFragment.OnFolderClickListener onFolderClickListener) {
 		this.onFolderClickListener = onFolderClickListener;
 	}
 
@@ -54,12 +54,12 @@ public class FolderAdapter extends BasePhotoAdapter<PhotoFolderModel, FolderAdap
 		@Override public void bindData(final PhotoFolderModel photoFolderModel, int position) {
 			if (photoFolderModel == null) return;
 			if (photoFolderModel.folderCover != null) {
-				Glide.with(ivFolderCover.getContext()).load(photoFolderModel.folderCover.path).thumbnail(0.1f).centerCrop().placeholder(R.mipmap.photo_error).into(ivFolderCover);
+				Glide.with(ivFolderCover.getContext()).load(photoFolderModel.folderCover.path).thumbnail(0.1f).centerCrop().placeholder(R.drawable.photo_error).into(ivFolderCover);
 			}
 			// 文件夹名称
 			tvFolderName.setText(photoFolderModel.folderName);
 			// 文件夹中图片数量
-			tvFolderPhotoCount.setText(MessageFormat.format("共{0}张", photoFolderModel.folderCount));
+			tvFolderPhotoCount.setText(MessageFormat.format("({0})", photoFolderModel.folderCount));
 
 			itemView.setOnClickListener(new View.OnClickListener() {
 

@@ -7,7 +7,7 @@
     <com.wiser.photo.weight.SquaredImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/photo_add_icon"
+        android:src="@drawable/photo_add_icon"
         android:adjustViewBounds="true"
         android:padding="5dp"
         android:scaleType="centerCrop"

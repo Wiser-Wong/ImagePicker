@@ -8,13 +8,14 @@ import java.util.List;
 
 import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.R;
-import com.wiser.photo.dialog.FolderDialogFragment;
 import com.wiser.photo.model.PhotoFolderModel;
 import com.wiser.photo.model.PhotoSelectModel;
 import com.wiser.photo.model.PhotoSettingData;
 import com.wiser.photo.preview.PhotoPreviewActivity;
 import com.wiser.photo.util.CameraTools;
 import com.wiser.photo.util.CompressAsyncTask;
+import com.wiser.photo.util.PickerHelper;
+import com.wiser.photo.weight.RotateAnimImageView;
 
 import android.Manifest;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -47,9 +49,15 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 
 	private TextView			tvPhotoSelectPreview;
 
+	private TextView 			tvPhotoFolderName;
+
+	private RotateAnimImageView ivPhotoSelectArrow;
+
 	private IPhotoSelectBiz		iPhotoSelectBiz;
 
 	private PhotoSelectAdapter	photoSelectAdapter;
+
+	private PhotoSelectFolderFragment folderFragment;
 
 	public static void intent(FragmentActivity activity, int surplusCount, int spanCount, int type) {
 		if (activity == null) return;
@@ -85,18 +93,19 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 
 	@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN) @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PickerHelper.setStatusBarFullTransparent(this);
 		setContentView(R.layout.photo_select_act);
 
 		RecyclerView rlvPhotoSelect = findViewById(R.id.rlv_photo_select);
 		tvPhotoSelectFinish = findViewById(R.id.tv_photo_select_finish);
-		TextView tvPhotoCancel = findViewById(R.id.tv_photo_select_cancel);
 		tvPhotoSelectPreview = findViewById(R.id.tv_photo_select_preview);
-		TextView tvAllPhotoFolder = findViewById(R.id.tv_all_photo_folder);
+		ivPhotoSelectArrow = findViewById(R.id.iv_photo_select_arrow);
+		tvPhotoFolderName = findViewById(R.id.tv_photo_folder_name);
 
-		tvPhotoCancel.setOnClickListener(this);
+		findViewById(R.id.tv_photo_select_cancel).setOnClickListener(this);
 		tvPhotoSelectPreview.setOnClickListener(this);
 		tvPhotoSelectFinish.setOnClickListener(this);
-		tvAllPhotoFolder.setOnClickListener(this);
+		findViewById(R.id.ll_photo_select).setOnClickListener(this);
 
 		if (getIntent() != null) {
 			if (!getIntent().getBooleanExtra("isObj", false)) {
@@ -161,6 +170,35 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 		photoSelectAdapter.setItems(list);
 	}
 
+	// 加载文件夹布局
+	public void loadFolderLayout(ArrayList<PhotoFolderModel> folderModels){
+		PickerHelper.commitReplace(this,R.id.fl_folder_content,folderFragment = PhotoSelectFolderFragment.newInstance(folderModels,new PhotoSelectFolderFragment.OnFolderClickListener() {
+
+			@Override public void onItemFolderClick(PhotoFolderModel folderModel) {
+				if (folderModel == null) return;
+				if (!iPhotoSelectBiz.getCurrentFolderPathType().equals(folderModel.folderPath)) {
+					iPhotoSelectBiz.setCurrentFolderPathType(folderModel.folderPath);
+					if (photoSelectAdapter != null) {
+						for (int i = 0; i < photoSelectAdapter.getSelectData().size(); i++) {
+							PhotoSelectModel photoSelectModel = photoSelectAdapter.getSelectData().get(i);
+							if (photoSelectModel != null) {
+								photoSelectModel.isSelect = false;
+								iPhotoSelectBiz.getModels().set(photoSelectModel.position, photoSelectModel);
+							}
+						}
+						photoSelectAdapter.resetData();
+						updateBtnStateUi(photoSelectAdapter.getCount());
+						photoSelectAdapter.setItems(folderModel.folderPhotos);
+						//文件夹名称
+						if (!TextUtils.isEmpty(folderModel.folderName)) tvPhotoFolderName.setText(folderModel.folderName);
+					}
+				}
+				iPhotoSelectBiz.setModels(folderModel.folderPhotos);
+				if (folderFragment != null) folderFragment.handleAnim();
+			}
+		}),PhotoSelectFolderFragment.class.getName());
+	}
+
 	@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode == PhotoConstant.PERMISSION_REQUEST_CODE) {
@@ -216,31 +254,10 @@ public class PhotoSelectActivity extends FragmentActivity implements View.OnClic
 					iPhotoSelectBiz.isCamera(), iPhotoSelectBiz.getPhotoSettingData());
 		} else if (id == R.id.tv_photo_select_finish) {// 完成
 			judgeExecuteCompress();
-		} else if (id == R.id.tv_all_photo_folder) {// 全部相册
-			FolderDialogFragment.newInstance(iPhotoSelectBiz.getFolderModels(), new FolderDialogFragment.OnFolderClickListener() {
-
-				@Override public void onItemFolderClick(PhotoFolderModel folderModel) {
-					if (folderModel == null) return;
-					if (!iPhotoSelectBiz.getCurrentFolderPathType().equals(folderModel.folderPath)) {
-						iPhotoSelectBiz.setCurrentFolderPathType(folderModel.folderPath);
-						if (photoSelectAdapter != null) {
-							for (int i = 0; i < photoSelectAdapter.getSelectData().size(); i++) {
-								PhotoSelectModel photoSelectModel = photoSelectAdapter.getSelectData().get(i);
-								if (photoSelectModel != null) {
-									photoSelectModel.isSelect = false;
-									iPhotoSelectBiz.getModels().set(photoSelectModel.position, photoSelectModel);
-								}
-							}
-							photoSelectAdapter.resetData();
-							updateBtnStateUi(photoSelectAdapter.getCount());
-							photoSelectAdapter.setItems(folderModel.folderPhotos);
-						}
-					}
-					iPhotoSelectBiz.setModels(folderModel.folderPhotos);
-					FolderDialogFragment folderDialogFragment = (FolderDialogFragment) getSupportFragmentManager().findFragmentByTag(FolderDialogFragment.class.getName());
-					if (folderDialogFragment != null) folderDialogFragment.dismiss();
-				}
-			}).show(getSupportFragmentManager(), FolderDialogFragment.class.getName());
+		} else if (id == R.id.ll_photo_select) {// 全部相册
+			if (ivPhotoSelectArrow.isRunningAnim()) return;
+			ivPhotoSelectArrow.handleAnim();
+			if (folderFragment != null) folderFragment.handleAnim();
 		}
 	}
 

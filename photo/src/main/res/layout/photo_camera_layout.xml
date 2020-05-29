@@ -9,7 +9,7 @@
         android:id="@+id/tv_camera_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@mipmap/photo_camera"
+        android:drawableTop="@drawable/photo_camera"
         android:textSize="13sp"
         android:gravity="center"
         android:layout_gravity="center"
