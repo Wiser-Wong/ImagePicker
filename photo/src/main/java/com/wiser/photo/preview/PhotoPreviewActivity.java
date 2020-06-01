@@ -7,6 +7,7 @@ import com.wiser.photo.PhotoConstant;
 import com.wiser.photo.R;
 import com.wiser.photo.model.PhotoSelectModel;
 import com.wiser.photo.model.PhotoSettingData;
+import com.wiser.photo.util.CenterLayoutManager;
 import com.wiser.photo.util.CompressAsyncTask;
 import com.wiser.photo.weight.SquaredImageView;
 
@@ -44,6 +45,10 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 
 	private LinearLayout				llPreviewSmallPhoto;
 
+	private RecyclerView 				rlvPreviewSmall;
+
+	private CenterLayoutManager 		centerLayoutManager;
+
 	private PreviewSmallPhotoAdapter	smallPhotoAdapter;
 
 	private IPhotoPreviewBiz			iPhotoPreviewBiz;
@@ -79,7 +84,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		llPreviewSmallPhoto = findViewById(R.id.ll_preview_small);
 		clPhotoPreviewTitle = findViewById(R.id.cl_photo_preview_title);
 		llPhotoPreviewBottom = findViewById(R.id.ll_photo_preview_bottom);
-		RecyclerView rlvPreview = findViewById(R.id.rlv_preview_small);
+		rlvPreviewSmall = findViewById(R.id.rlv_preview_small);
 
 		ivPhotoPreviewBack.setOnClickListener(this);
 		tvPhotoPreviewFinish.setOnClickListener(this);
@@ -92,10 +97,10 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		vpPreviewPhoto.setCurrentItem(iPhotoPreviewBiz.getPosition());
 		vpPreviewPhoto.addOnPageChangeListener(this);
 
-		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-		linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		rlvPreview.setLayoutManager(linearLayoutManager);
-		rlvPreview.setAdapter(smallPhotoAdapter = new PreviewSmallPhotoAdapter(this));
+		centerLayoutManager = new CenterLayoutManager(this);
+		centerLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		rlvPreviewSmall.setLayoutManager(centerLayoutManager);
+		rlvPreviewSmall.setAdapter(smallPhotoAdapter = new PreviewSmallPhotoAdapter(this));
 		smallPhotoAdapter.setIndex(
 				iPhotoPreviewBiz.getList() != null && iPhotoPreviewBiz.getList().size() > iPhotoPreviewBiz.getPosition() ? iPhotoPreviewBiz.getList().get(iPhotoPreviewBiz.getPosition()).position
 						: -1);
@@ -165,6 +170,15 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		}
 
 		updateBtnStateUi();
+
+		updateSmallCenterPosition(smallPhotoAdapter.getItemCount() - 1);
+	}
+
+	// 更新小图预览位置处于中心位置
+	private void updateSmallCenterPosition(int position){
+		//自动滑动小图片预览到中心位置
+		if (centerLayoutManager != null && rlvPreviewSmall != null && smallPhotoAdapter != null && position >= 0 && smallPhotoAdapter.getItemCount() > position)
+			centerLayoutManager.smoothScrollToPosition(rlvPreviewSmall, new RecyclerView.State(), position);
 	}
 
 	// 更新选择图片底部按钮UI
@@ -187,7 +201,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 	}
 
 	// 根据小图片预览点击跳转相应位置
-	public void setPageItem(PhotoSelectModel model) {
+	public void setPageItem(PhotoSelectModel model,int position) {
 		if (model == null) return;
 		if (iPhotoPreviewBiz.isCamera()) {
 			if (iPhotoPreviewBiz.isNoBtnPreview()) {
@@ -207,6 +221,8 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 				vpPreviewPhoto.setCurrentItem(iPhotoPreviewBiz.matchIndex(model), false);
 			}
 		}
+
+		updateSmallCenterPosition(position);
 	}
 
 	// 更新小图片展示
@@ -223,6 +239,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		super.onDestroy();
 		if (iPhotoPreviewBiz != null) iPhotoPreviewBiz.onDetach();
 		iPhotoPreviewBiz = null;
+		centerLayoutManager = null;
 	}
 
 	@Override public void onPageScrolled(int i, float v, int i1) {
@@ -234,6 +251,9 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 		smallPhotoAdapter.setIndex(iPhotoPreviewBiz.getList() != null && iPhotoPreviewBiz.getList().size() > i ? iPhotoPreviewBiz.getList().get(i).position : -1);
 		if (iPhotoPreviewBiz.isSelect(i)) ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_selected);
 		else ivPhotoPreviewCheck.setBackgroundResource(R.drawable.photo_unselected);
+
+		// 自动定位到小图片预览中心位置
+		updateSmallCenterPosition(iPhotoPreviewBiz.calculateSmallPhotoPosition(iPhotoPreviewBiz.getList() != null && iPhotoPreviewBiz.getList().size() > i ? iPhotoPreviewBiz.getList().get(i).position : -1));
 	}
 
 	@Override public void onPageScrollStateChanged(int i) {

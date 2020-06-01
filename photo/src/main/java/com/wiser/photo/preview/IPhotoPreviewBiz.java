@@ -48,6 +48,9 @@ public interface IPhotoPreviewBiz {
 
 	void selectPhotoClick(int position);
 
+	// 根据ViewPager位置计算小图片显示的位置
+	int calculateSmallPhotoPosition(int position);
+
 	PhotoSettingData getPhotoSettingData();
 
 	String[] covertSelectDataStrings(ArrayList<PhotoSelectModel> models);
@@ -193,6 +196,15 @@ class PhotoPreviewBiz implements IPhotoPreviewBiz {
 		list.set(position, photoSelectModel1);
 		activity.updateUi(photoSelectModel1.isSelect);
 
+	}
+
+	@Override
+	public int calculateSmallPhotoPosition(int position) {
+		if (getSelectData() == null || getSelectData().size() == 0) return -1;
+		for (int i = 0; i < getSelectData().size(); i++) {
+			if (position == getSelectData().get(i).position) return i;
+		}
+		return -1;
 	}
 
 	@Override public PhotoSettingData getPhotoSettingData() {

@@ -47,7 +47,7 @@ public class PreviewSmallPhotoAdapter extends BasePhotoAdapter<PhotoSelectModel,
 			flSmallFrame = itemView.findViewById(R.id.fl_small_frame);
 		}
 
-		@Override public void bindData(final PhotoSelectModel photoSelectModel, int position) {
+		@Override public void bindData(final PhotoSelectModel photoSelectModel, final int position) {
 			if (photoSelectModel == null) return;
 			Glide.with(ivSmallPhoto.getContext()).load(photoSelectModel.path).thumbnail(0.1f).centerCrop().into(ivSmallPhoto);
 
@@ -57,7 +57,7 @@ public class PreviewSmallPhotoAdapter extends BasePhotoAdapter<PhotoSelectModel,
 			ivSmallPhoto.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					((PhotoPreviewActivity) getContext()).setPageItem(photoSelectModel);
+					((PhotoPreviewActivity) getContext()).setPageItem(photoSelectModel,position);
 				}
 			});
 		}
