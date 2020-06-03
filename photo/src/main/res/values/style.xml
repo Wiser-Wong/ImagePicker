@@ -68,7 +68,7 @@
         <!-- 有无边框 改变Dialog透明背景颜色-->
         <item name="android:windowFrame">@null</item>
         <!-- 是否浮现在activity之上 true 是适配Dialog弹窗，false是全屏展示背景默认白色 与windowFrame配合使用改变色值-->
-        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsFloating">false</item>
         <!-- 有无标题-->
         <item name="android:windowNoTitle">true</item>
         <!-- 是否透明-->

@@ -9,6 +9,7 @@ import com.wiser.photo.model.PhotoSelectModel;
 import com.wiser.photo.model.PhotoSettingData;
 import com.wiser.photo.util.CenterLayoutManager;
 import com.wiser.photo.util.CompressAsyncTask;
+import com.wiser.photo.util.PickerHelper;
 import com.wiser.photo.weight.SquaredImageView;
 
 import android.animation.Animator;
@@ -75,6 +76,7 @@ public class PhotoPreviewActivity extends FragmentActivity implements View.OnCli
 
 	@Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PickerHelper.setStatusBarFullTransparent(this);
 		setContentView(R.layout.photo_preview_act);
 
 		vpPreviewPhoto = findViewById(R.id.vp_preview_photo);

@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/cl_photo_preview_title"
-    android:alpha="9"
-    android:background="#292929">
+    android:background="#3C3C3C">
 
     <com.wiser.photo.weight.SquaredImageView
         android:id="@+id/iv_photo_preview_back"

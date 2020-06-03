@@ -6,6 +6,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,6 +75,16 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 			getDialog().setCanceledOnTouchOutside(true);
 
 			getDialog().setOnKeyListener(this);
+
+			// 设置背景透明 显示弹窗弧度
+			if (getDialog().getWindow() != null) {
+				getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+			}
+		}
+
+		// 遮挡状态栏
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		rlImagePreviewTitle = view.findViewById(R.id.rl_image_preview_title);
@@ -96,6 +109,7 @@ public class ImagePreviewDialogFragment extends DialogFragment implements View.O
 		if (window != null && getActivity() != null) {
 			WindowManager.LayoutParams wlp = window.getAttributes();
 			wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+			wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
 			window.setAttributes(wlp);
 		}
 	}
